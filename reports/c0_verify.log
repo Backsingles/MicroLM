@@ -1,0 +1,30 @@
+﻿C0 exit code: 0
+
+Qwen2.5-1.5B-Instruct files:
+
+Name                       Length LastWriteTime     
+----                       ------ -------------     
+.gitattributes               1519 2026/5/20 20:34:44
+config.json                   660 2026/5/20 20:34:44
+generation_config.json        242 2026/5/20 20:34:44
+LICENSE                     11343 2026/5/20 20:34:45
+merges.txt                1671839 2026/5/20 20:34:46
+model.safetensors      3087467144 2026/5/20 20:43:14
+README.md                    4917 2026/5/20 20:34:44
+tokenizer.json            7031645 2026/5/20 20:34:47
+tokenizer_config.json        7305 2026/5/20 20:34:45
+vocab.json                2776833 2026/5/20 20:34:47
+
+
+
+InstructIE required files:
+
+Name              Length LastWriteTime     
+----              ------ -------------     
+train_zh.json  400633488 2026/5/19 19:34:56
+valid_zh.json     624008 2026/5/19 19:33:59
+test_zh.json      620472 2026/5/19 19:33:58
+schema_zh.json      8902 2026/5/19 19:33:57
+
+
+

@@ -1,0 +1,16 @@
+{
+  "step": "normalize",
+  "input_counts": {
+    "train": 171471,
+    "valid": 1004,
+    "test": 1002
+  },
+  "output_counts": {
+    "train": 171471,
+    "valid": 1004,
+    "test": 1002
+  },
+  "cate_map_applied": {
+    "建筑结构": "建筑"
+  }
+}

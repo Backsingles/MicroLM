@@ -1,0 +1,167 @@
+﻿Exit code:
+0
+
+Top-level outputs:
+
+Name                 Length LastWriteTime     
+----                 ------ -------------     
+adaptor_final               2026/5/20 22:54:40
+best_adaptor                2026/5/20 21:33:25
+ckpt_step_1000              2026/5/20 22:09:36
+ckpt_step_1500              2026/5/20 22:33:03
+ckpt_step_2000              2026/5/20 22:54:40
+ckpt_step_500               2026/5/20 21:49:04
+resolved_config.json 1214   2026/5/20 21:29:44
+train_log.jsonl      1945   2026/5/20 22:54:40
+
+
+
+Adapter files:
+
+DirectoryName                               Name                       Length LastWriteTime     
+-------------                               ----                       ------ -------------     
+E:\MicroLM\outputs\qwen_lora\adaptor_final  adapter_config.json          1096 2026/5/20 22:54:40
+E:\MicroLM\outputs\qwen_lora\adaptor_final  adapter_model.safetensors 8745704 2026/5/20 22:54:40
+E:\MicroLM\outputs\qwen_lora\adaptor_final  README.md                    5200 2026/5/20 22:54:40
+E:\MicroLM\outputs\qwen_lora\best_adaptor   adapter_config.json          1096 2026/5/20 22:54:40
+E:\MicroLM\outputs\qwen_lora\best_adaptor   adapter_model.safetensors 8745704 2026/5/20 22:54:40
+E:\MicroLM\outputs\qwen_lora\best_adaptor   README.md                    5200 2026/5/20 22:54:40
+E:\MicroLM\outputs\qwen_lora\ckpt_step_2000 adapter_config.json          1096 2026/5/20 22:54:40
+E:\MicroLM\outputs\qwen_lora\ckpt_step_2000 adapter_model.safetensors 8745704 2026/5/20 22:54:40
+E:\MicroLM\outputs\qwen_lora\ckpt_step_2000 README.md                    5200 2026/5/20 22:54:40
+
+
+
+Train log last rows:
+{"step": 1600, "train_loss": 0.147618, "val_loss": 0.161547, "lr": 2e-05, "elapsed_sec": 4069.8}
+{"step": 1700, "train_loss": 0.199097, "val_loss": 0.160555, "lr": 2e-05, "elapsed_sec": 4335.2}
+{"step": 1800, "train_loss": 0.181111, "val_loss": 0.159483, "lr": 2e-05, "elapsed_sec": 4604.3}
+{"step": 1900, "train_loss": 0.090205, "val_loss": 0.157389, "lr": 2e-05, "elapsed_sec": 4845.8}
+{"step": 2000, "train_loss": 0.18602, "val_loss": 0.155349, "lr": 2e-05, "elapsed_sec": 5079.3}
+
+D1 stdout last lines:
+Step 1000/2000 | train_loss 0.1505 | val_loss 0.1777 | lr 2.00e-05 | elapsed 2375s
+  -> New best val_loss: 0.1777
+  -> Saved checkpoint: outputs\qwen_lora\ckpt_step_1000
+Step 1100/2000 | train_loss 0.1436 | val_loss 0.1732 | lr 2.00e-05 | elapsed 2652s
+  -> New best val_loss: 0.1732
+Step 1200/2000 | train_loss 0.2000 | val_loss 0.1708 | lr 2.00e-05 | elapsed 2923s
+  -> New best val_loss: 0.1708
+Step 1300/2000 | train_loss 0.1694 | val_loss 0.1684 | lr 2.00e-05 | elapsed 3206s
+  -> New best val_loss: 0.1684
+Step 1400/2000 | train_loss 0.2420 | val_loss 0.1653 | lr 2.00e-05 | elapsed 3492s
+  -> New best val_loss: 0.1653
+Step 1500/2000 | train_loss 0.2110 | val_loss 0.1654 | lr 2.00e-05 | elapsed 3782s
+  -> Saved checkpoint: outputs\qwen_lora\ckpt_step_1500
+Step 1600/2000 | train_loss 0.1476 | val_loss 0.1615 | lr 2.00e-05 | elapsed 4070s
+  -> New best val_loss: 0.1615
+Step 1700/2000 | train_loss 0.1991 | val_loss 0.1606 | lr 2.00e-05 | elapsed 4335s
+  -> New best val_loss: 0.1606
+Step 1800/2000 | train_loss 0.1811 | val_loss 0.1595 | lr 2.00e-05 | elapsed 4604s
+  -> New best val_loss: 0.1595
+Step 1900/2000 | train_loss 0.0902 | val_loss 0.1574 | lr 2.00e-05 | elapsed 4846s
+  -> New best val_loss: 0.1574
+Step 2000/2000 | train_loss 0.1860 | val_loss 0.1553 | lr 2.00e-05 | elapsed 5079s
+  -> New best val_loss: 0.1553
+  -> Saved checkpoint: outputs\qwen_lora\ckpt_step_2000
+
+Training complete. Final adaptor saved to outputs\qwen_lora\adaptor_final
+  Steps: 100 -> 2000
+  Train loss: 0.3729 -> 0.1860
+  Val loss: 0.4025 -> 0.1553
+  Best val loss: 0.1553
+
+D1 stderr last lines:
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+
+Loading weights:   0%|          | 0/338 [00:00<?, ?it/s]
+Loading weights:  15%|█▌        | 51/338 [00:00<00:00, 505.56it/s]
+Loading weights:  44%|████▍     | 148/338 [00:00<00:00, 760.87it/s]
+Loading weights:  72%|███████▏  | 244/338 [00:00<00:00, 848.53it/s]
+Loading weights: 100%|██████████| 338/338 [00:00<00:00, 857.41it/s]
+
+Git diff touched script summary:
+git : warning: in the working copy of 'scripts/train_qwen_lora.py', LF will be replaced by CRLF the next time Git touches it
+所在位置 行:20 字符: 11
++ $out.Add((git diff -- scripts\train_qwen_lora.py 2>&1 | Select-Object ...
++           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (warning: in the... Git touches it:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+diff --git a/scripts/train_qwen_lora.py b/scripts/train_qwen_lora.py
+index 6907521..7ceffaa 100644
+--- a/scripts/train_qwen_lora.py
++++ b/scripts/train_qwen_lora.py
+@@ -62,6 +62,24 @@ class InstructIEDataset(Dataset):
+ 
+         print(f"  Loaded {len(self.samples)} samples from {data_path}")
+ 
++    @staticmethod
++    def _as_token_ids(encoded) -> list[int]:
++        """Normalize tokenizer outputs to a plain list of token ids."""
++        try:
++            if "input_ids" in encoded:
++                encoded = encoded["input_ids"]
++        except (KeyError, TypeError):
++            pass
++        if hasattr(encoded, "ids"):
++            return list(encoded.ids)
++        if torch.is_tensor(encoded):
++            return encoded.detach().cpu().tolist()
++        if encoded and isinstance(encoded[0], list):
++            encoded = encoded[0]
++        if hasattr(encoded, "ids"):
++            return list(encoded.ids)
++        return list(encoded)
++
+     def _process_sample(self, messages: list[dict]) -> dict | None:
+         # Build full message list with system prompt
+         full_messages = []
+@@ -71,16 +89,20 @@ class InstructIEDataset(Dataset):
+             full_messages.append(msg)
+ 
+         # Tokenize full conversation
+-        full_ids = self.tokenizer.apply_chat_template(
+-            full_messages, tokenize=True, truncation=True, max_length=self.max_length
++        full_ids = self._as_token_ids(
++            self.tokenizer.apply_chat_template(
++                full_messages, tokenize=True
++            )
+         )
+         if len(full_ids) < 2:
+             return None
+ 
+         # Build prefix (everything before assistant output)
+         prefix_messages = full_messages[:-1]  # exclude assistant
+-        prefix_ids = self.tokenizer.apply_chat_template(
+-            prefix_messages, tokenize=True, add_generation_prompt=True
++        prefix_ids = self._as_token_ids(
++            self.tokenizer.apply_chat_template(
++                prefix_messages, tokenize=True, add_generation_prompt=True
++            )
+         )
+ 
+         # Verify prefix matches
+@@ -90,12 +112,16 @@ class InstructIEDataset(Dataset):
+         else:
+             prefix_len = len(prefix_ids)
+ 
+-        # Build labels: -100 for non-assistant tokens
+-        labels = [-100] * prefix_len + full_ids[prefix_len:]
++        prefix_len = min(prefix_len, len(full_ids))
+ 
+-        # Truncate to max_length
+-        input_ids = full_ids[:self.max_length]
+-        labels = labels[:self.max_length]
++        # Build labels: -100 for non-assistant tokens. For long IE prompts,
++        # keep the tail so the assistant JSON answer is not truncated away.
++        labels_full = [-100] * prefix_len + full_ids[prefix_len:]
++        start = max(0, len(full_ids) - self.max_length)
++        input_ids = full_ids[start:]
++        labels = labels_full[start:]
++        if all(label == -100 for label in labels):
++            return None
+ 
+         return {"input_ids": input_ids, "labels": labels}
+ 
+

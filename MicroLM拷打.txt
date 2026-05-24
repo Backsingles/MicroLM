@@ -1,0 +1,319 @@
+============================================================
+三、简历项目拷打问题：Qwen / MicroLM 训练、微调、部署
+============================================================
+
+说明：以下答案按面试口述风格整理。遇到容易被追问的数字口径，我会主动说明，例如 MicroLM 的 31.7M 是约数口径，Qwen LoRA 的 8.3M 更准确应说 8.3MB adaptor 存储。
+
+一、MicroLM 31.7M 参数与预训练
+
+1. 31.7M 参数是怎么算出来的？
+答：按模块拆。vocab=6400、d_model（维度）=512，所以 token embedding 是 6400*512=3.28M，lm_head（模型最后一层，把隐藏状态隐射回词表概率） 也是 3.28M。每层 Transformer 主要是 attention 的 4 （QKV O输出） 个 512*512 投影约 1.05M，加上 SwiGLU 的 3 个矩阵 512*1344、1344*512、512*1344，约 2.06M，再加 RMSNorm，很小。8 层大约 24.91M = 8*（1.05+2.06）。基座模型代码实际统计约 31.47M；如果注入 MicroLM LoRA 后额外加 262K=（8*512+8*512）*attention4层投影*8层transformer，总量约 31.73M，所以简历里写约 31.7M。面试时我会强调预训练阶段训练的是基座参数，LoRA 是 SFT 阶段才加的。
+
+2. 模型结构具体是什么？
+答：是 decoder-only TransformerLM：token embedding（模型第一层，把token ID转换成向量） -> 8 层 Transformer block -> final RMSNorm -> lm_head。每个 block 是 pre-norm 结构（先归一化，训练更稳定，尤其是模型层数变深时更容易收敛。），包含 Multi-Head Self-Attention（多头注意力机制，关注不同的关系，语法、指代、局部上下文）、RoPE 位置编码、残差连接、SwiGLU FFN 和 RMSNorm（归一化）。
+
+3. 几层 Transformer？
+答：8 层。这个规模是为了让模型能在单卡上完成从 tokenizer、预训练、SFT、LoRA 到推理优化的完整闭环，同时保留现代 LLM 的关键组件。
+
+4. hidden size、head 数、FFN 维度是多少？
+答：hidden size 是 512，attention head 数是 8，所以每个 head 的维度是 64。FFN 中间维度 d_ff 是 1344，context length 是 512，vocab size 是 6400。
+
+5. RoPE 是什么？
+答：RoPE 是 Rotary Position Embedding，旋转位置编码。它不是把位置向量加到 token embedding 上，而是在 attention 的 Q、K 上按位置做二维旋转，让注意力内积天然带有相对位置信息。
+
+6. SwiGLU 是什么？对每个 token 的隐藏向量做非线性特征变换。
+答：SwiGLU 是一种门控 FFN。形式可以理解成 FFN(x)=W2(SiLU(W1x)*W3x)，其中一条分支提供激活，另一条分支提供门控。相比 ReLU FFN，它表达能力更强，也是 LLaMA/Qwen 这类模型常用的 FFN 结构。 FFN = Feed Forward Network，前馈神经网络。
+
+7. 为什么用 BPE tokenizer？
+答：BPE 在小模型里比较稳妥。它能从 byte/字符级出发学习常见子词，兼顾未登录词处理和压缩率；中文场景下也能覆盖常用字和高频词片段。相比纯字级，序列更短；相比大词表，embedding 参数不会膨胀。
+
+8. vocab size 为什么是 6400？
+答：这是模型容量和 token 效率之间的折中。31M 级模型如果词表太大，embedding 和 lm_head 会吃掉过多参数；6400 对中文常用字和常见子词已经够用，同时把参数主要留给 Transformer 层。代价是结构化 JSON 输出时 token 效率偏低，这也是后来迁移到 Qwen 的原因之一。
+
+9. 316M tokens 对 31.7M 模型够不够？
+答：够做一个有效的预训练闭环，但不算完全吃满。从经验上看，316M tokens 大约是 10 tokens/param，能让 31M 级模型明显收敛；如果按更激进的 compute-optimal 口径，可能还可以继续加数据。但这个项目目标不是刷 SOTA，而是验证完整训练链路。
+
+10. 预训练 loss 8.85 降到 2.4，说明了什么？
+答：说明模型从接近随机预测逐步学到了语料的 token 分布。cross entropy 从 8.85 到 2.4，对应困惑度从 exp(8.85) 约 7000 降到 exp(2.4) 约 11，下降非常明显，证明数据、模型和训练循环是有效的。
+
+11. loss 2.4 还能不能继续降？
+答：可以，但收益会递减。继续降可以靠更多 token、更长训练、更好的数据清洗或调参；但在 31M 参数和 512 上下文限制下，最终会碰到容量上限。我的判断是它已经足够支撑后续 SFT 实验，但不是一个强通用模型。
+
+12. 训练数据怎么清洗？
+答：主要做了控制字符清理、HTML 标签清理、空白压缩、长度过滤、精确去重，然后再做 train/valid 切分和 tokenization。清洗规则都是脚本参数化的，方便复现实验。
+
+13. SHA1 切分是什么意思？
+答：不是随机 shuffle 后切分，而是对样本内容或样本 id 做 SHA1 哈希，再按哈希值落到 train 或 valid。好处是确定性、可复现，同一条样本每次都会落到同一个集合，避免多次处理后切分漂移。
+
+14. 为什么要做去重？
+答：去重有两个目的：一是减少重复样本导致的过拟合，二是避免 train 和 valid/test 出现同样文本，造成评测虚高。语言模型很容易记住重复文本，所以去重是数据质量的基础步骤。
+
+15. train/valid 怎么切？
+答：预训练阶段用 SHA1 哈希做确定性切分，先切分再 tokenization。Qwen SFT 阶段是从最终采样的 30K 样本里切 95% 训练、5% 验证，也就是 28,500 条 train 和 1,500 条 valid。
+
+16. 怎么避免数据泄露？
+答：预训练里靠哈希切分和去重，避免同一文本同时进 train/valid。Qwen 的 InstructIE pipeline 里还显式检查了 train 与 valid/test 的交集，发现的跨集重复样本会硬过滤。严格说，精确重复能处理，语义近似重复只能通过后续更强的相似度去重继续增强。
+
+17. 你说 loss 从 8.85 降到 2.4，那困惑度是多少？这个效果好吗？
+答：困惑度是 exp(loss)。8.85 对应大约 7000，2.4 对应大约 11。对 31M 级中文小模型来说，这是一个很明显的收敛结果，说明模型能学到基本语言分布；但它还不是大模型级别的低困惑度，复杂指令和长文本生成仍然受限。
+
+二、Transformer / RoPE / SwiGLU
+
+1. Transformer 的结构是什么？
+答：我实现的是 decoder-only Transformer。输入 token id 先过 embedding，再经过多层 block；每个 block 包含 RMSNorm、masked self-attention、残差、RMSNorm、SwiGLU FFN、残差；最后 final RMSNorm 和 lm_head 输出词表 logits。
+
+2. Self-Attention 公式是什么？
+答：核心公式是 Attention(Q,K,V)=softmax(QK^T/sqrt(d_k)+mask)V。QK^T 计算每个 query 对 key 的相关性，除以 sqrt(d_k) 做缩放，softmax 得到权重后对 V 加权求和。
+
+softmax(x_i) = exp(x_i) / sum(exp(x_j))，把模型输出的原始分数，变成每个 token 的概率。
+
+3. Q、K、V 分别是什么？
+答：Q 是当前 token 用来“查询”的表示，K 是历史 token 用来“被匹配”的表示，V 是真正被聚合的信息内容。它们都是由输入 hidden states 经过不同线性投影得到的。
+
+4. Multi-Head Attention 为什么有用？
+答：多头把 hidden 维度切成多个子空间，让不同头可以关注不同关系，比如局部词法、长距离依赖、实体关系等。最后再拼接回 hidden size，相当于并行学习多种注意力模式。
+
+5. RoPE 和绝对位置编码有什么区别？
+答：绝对位置编码通常是把位置向量加到 token embedding 上，模型需要自己学习位置关系。RoPE 是对 Q/K 做旋转，位置参与 attention 内积，因此更自然地表达相对距离，也更适合自回归模型外推到相近长度范围。
+
+6. RoPE 为什么能表达相对位置信息？
+答：因为位置 m 和 n 的旋转矩阵进入 Q、K 内积后，结果只与 m-n 的相对偏移有关。也就是说，两个 token 的 attention 分数会显式携带相对距离信息，而不只是各自的绝对位置。
+
+7. SwiGLU 和 ReLU 的区别？
+答：ReLU FFN 是单路激活，形式更简单；SwiGLU 是门控结构，用 SiLU(W1x) 和 W3x 相乘后再投影，能动态控制信息通过。它参数稍多，但表达能力和训练效果通常更好。
+
+8. RMSNorm 和 LayerNorm 有什么区别？
+答：LayerNorm 会减均值再除以标准差，RMSNorm 只用均方根做缩放，不做均值中心化。RMSNorm 参数更少、计算更简单，在大语言模型里很常见，稳定性也足够好。
+
+9. Decoder-only 模型和 Encoder-only 模型区别？
+答：Decoder-only 用 causal mask，只能看当前位置之前的 token，适合自回归生成。Encoder-only 通常是双向 attention，可以看完整输入，适合理解类任务，比如分类、匹配、抽取，但不能天然逐 token 生成。
+
+10. causal mask 是什么？
+答：causal mask 是下三角掩码，保证第 t 个位置只能 attend 到 0 到 t 的 token，不能偷看未来 token。训练时虽然整段序列并行输入，但 mask 保证目标仍然是合法的自回归预测。
+
+11. 训练时为什么可以并行，推理时为什么不能完全并行？
+答：训练时真实序列已经给定，所有位置的输入都已知，可以一次性计算所有位置的 next-token loss；推理时下一个 token 还没生成，必须先采样第 t+1 个 token，才能继续生成第 t+2 个，所以 decode 阶段天然串行。prefill 阶段仍然可以并行。
+
+12. prefill 和 decode 有什么区别？
+答：prefill 是把完整 prompt 一次性送入模型，计算所有 prompt token 的 hidden states，并缓存每层 K/V。decode 是后续每次只输入一个新 token，复用历史 KV cache 来生成下一个 token。
+
+13. KV cache 是什么？
+答：KV cache 是在自回归推理中缓存每一层历史 token 的 Key 和 Value。这样生成新 token 时不需要重算历史 token 的 K/V，只需要计算新 token 的 Q/K/V，并让新 Q attend 到缓存的 K/V。
+
+三、Qwen 迁移链路与数据 Pipeline
+
+1. 为什么要从 171K 采样到 28.5K？
+答：原始 171K 数据存在 topic 不均衡、字段不统一、跨集重复和长尾噪声。直接全量训练会让模型过拟合高频 topic 和噪声格式。最终选择 30K 高质量样本，再切 28.5K train 和 1.5K valid，是为了用更可控的数据分布换更稳定的训练收益。
+
+2. 采样策略是什么？
+答：分层采样。先只保留 high quality 样本，再按 task_type、topic、复杂度分层。任务比例是 ie_extraction 50%、text_to_json 25%、format_following 15%、schema_repair 10%，12 个 topic 基本均衡，各约 2500 条。
+
+3. 什么叫分层？
+答：分层就是先按关键属性把样本分桶，再从每个桶按目标比例采样，而不是全局随机抽。这样可以避免高频类别把低频类别淹没，保证训练集和验证集都覆盖不同任务和 topic。
+
+4. 任务派生是什么意思？
+答：不是只把一条 InstructIE 样本原样拿来训练，而是从同一条结构化抽取样本派生出多种训练任务：标准信息抽取、文本转 JSON、格式遵循、schema 修复。这样同一份标注能提供不同角度的训练信号。
+
+5. chatJSONL 是什么格式？
+答：JSONL 是一行一个 JSON 样本。chatJSONL 指每行样本都被组织成聊天格式，通常包含 system/user/assistant messages，user 里放 instruction、schema、input，assistant 里放目标 JSON output，方便直接套 Qwen 的 chat template。
+
+6. JSON 校验 100% 校验的是什么？
+答：校验的是训练目标输出能被 json.loads 正常解析，格式上是合法 JSON，不是 markdown，也不是半截文本。它保证 SFT 学到的是干净的结构化输出格式，但不代表字段语义一定 100% 正确。
+
+7. 为什么要做标准化？
+答：因为原始数据字段不完全一致，比如 train 用 text，valid/test 用 input；relation 结构也有差异；topic 名称还有漂移。标准化把这些差异统一掉，后续过滤、采样、训练和评测才不会被 schema 噪声干扰。
+
+8. 过滤掉了哪些数据？
+答：主要过滤空关系样本、跨集泄露样本、关系数过多样本、输入过长或过短样本、head/tail 过长样本，以及按 topic P99 判断的极端长度或极端输出样本。这些样本要么质量低，要么会拉高训练不稳定性。
+
+9. 数据清洗有没有可能损失有效样本？
+答：有可能，所以我没有做特别激进的语义过滤，而是以硬规则和 P99 outlier 为主。面试里我会说这是 precision-first 的策略：宁愿少量丢掉边界样本，也先保证 30K SFT 数据干净、分布可控。
+
+10. 训练集和验证集怎么划分？
+答：最终 30K 样本切成 28,500 train 和 1,500 valid，也就是 95/5。切分在最终标准化和采样之后进行，并固定随机种子，保证可复现。
+
+11. 有没有按任务类型分布保持一致？
+答：有。任务比例是显式控制的：50% 信息抽取、25% 文本转 JSON、15% 格式遵循、10% schema 修复。topic 也做了均衡，12 个 topic 各约 2500 条，避免高频 topic 主导训练。
+
+12. 有没有数据泄露？
+答：做了显式防护。pipeline 里检查并过滤了 train 与 valid/test 的精确交集；最终 valid 是从 SFT 候选集中独立切出来的，训练时不会参与梯度更新。严格说，近似语义泄露需要额外 embedding 相似度去重，这是后续可以增强的点。
+
+13. InstructIE 是什么任务？
+答：InstructIE 是 instruction-based information extraction，给模型一段文本和一个 schema，让模型按照 schema 抽取实体、属性或关系，并输出结构化 JSON。它非常适合验证“指令跟随 + 结构化输出”能力。
+
+14. 结构化信息抽取和普通文本生成有什么区别？
+答：普通文本生成看的是流畅性、相关性和完整性；结构化抽取看的是 JSON 是否可解析、字段是否齐全、值是否正确、有没有多输出幻觉字段。它的评测更硬，也更适合自动化。
+
+15. 为什么不是直接用 171K 全量训练？
+答：因为全量并不等于高质量。171K 原始数据有噪声、重复和分布倾斜；对 LoRA 来说，格式和分布质量比盲目加量更重要。先用 30K 高质量均衡数据把任务学稳，比用全量噪声数据更可控。
+
+四、LoRA SFT
+
+1. LoRA 原理是什么？
+答：LoRA 冻结原始权重 W，只训练一个低秩增量 delta W = B*A。前向时等价于 y = Wx + alpha/r * BAx。训练结束后可以把 BA 合并回 W，推理时没有额外结构负担。
+
+2. LoRA 为什么能减少训练参数？
+答：因为原本一个线性层要训练 out*in 个参数，LoRA 只训练 r*in + out*r 个参数。当 r 远小于 in/out 时，参数量会小很多。比如 rank=8 时，注意力投影层的可训练参数只占全模型很小比例。
+
+3. LoRA 的 A、B 矩阵分别是什么？
+答：A 通常是 down projection，形状是 r*in_features；B 是 up projection，形状是 out_features*r。项目里 A 用 Kaiming 初始化，B 零初始化，这样一开始 delta W 为 0，注入 LoRA 后模型初始行为不变。
+
+4. LoRA rank 怎么选？
+答：rank 是容量和效率的权衡。r 越大表达能力越强，但参数和显存也更高。这个项目选 r=8，是因为结构化输出主要是行为和格式适配，不需要很高 rank；同时 r=8 在单卡训练成本和效果之间比较稳。
+
+5. alpha 是什么？
+答：alpha 是 LoRA 增量的缩放系数，实际 scaling 是 alpha/r。Qwen 配置里 alpha=16、r=8，所以 scaling=2。它控制 LoRA 更新对原模型输出的影响强度。
+
+6. target modules 选了哪些？
+答：Qwen LoRA 选的是 q_proj、k_proj、v_proj、o_proj，也就是 attention 的四个投影层。MicroLM 自研 LoRA 对应的是 q_proj、k_proj、v_proj、output_proj。没有改 embedding 和 FFN，是为了保持训练参数少、风险低。
+
+7. 为什么只训练 0.14% 参数？
+答：因为只在 Qwen 的 attention 投影层挂 rank=8 的 LoRA，基座 1.55B 参数全部冻结。可训练参数大约 2.18M，2.18M / 1.55B 约等于 0.14%。这正是 LoRA 的优势：用很小参数改变模型行为。
+
+8. 8.3M 参数怎么算的？
+答：这里严格说不是 8.3M 参数，而是约 8.3MB 的 adaptor 存储。Qwen LoRA 可训练参数是 2,179,072。按 Qwen2.5-1.5B 的结构，每层 q/o 是 8*(1536+1536)，k/v 是 8*(1536+256)，每层 77,824，28 层正好 2,179,072。FP32 存储约 8.7MB，序列化后报告里是约 8.3MB。
+
+9. LoRA 和全量微调有什么区别？
+答：全量微调更新模型所有参数，容量最高但显存、存储和过拟合风险都更大。LoRA 冻结基座，只学低秩增量，训练和存储成本低，适合任务适配；缺点是上限可能低于全参微调。
+
+10. LoRA 会不会影响模型上限？
+答：会有影响，因为低秩空间限制了可学习更新的自由度。如果任务需要深层知识重塑，全参更强；但结构化抽取更多是格式、字段和行为约束，LoRA 的容量已经足够带来明显收益。
+
+11. SFT 的 loss 是什么？
+答：SFT 本质还是 next-token cross entropy，但只对 assistant 输出部分计算 loss。prompt、system、user、schema 这些输入部分 label 置为 -100，不参与梯度，让模型学习“看到指令后输出目标 JSON”，而不是复读 prompt。
+
+12. 为什么训练 2000 steps？
+答：这是 smoke test 后选的正式训练预算。2000 steps 下 val loss 已经从快速下降进入缓慢下降，训练稳定、没有明显过拟合，同时单卡耗时可控。继续训练可能还能小幅提升，但边际收益会降低。
+
+13. valid loss 从 1.15 到 0.83 说明什么？
+答：说明模型在验证集 assistant 输出 token 上的预测变准了，SFT 确实学到了结构化输出分布。需要注意 loss 只说明 token-level 拟合更好，不等价于字段和值完全正确，所以后面还要看 Parse%、Exact Match、Field F1、Pair F1。
+
+14. train loss 和 val loss 的关系怎么看？
+答：理想状态是 train loss 和 val loss 都下降，且差距不要越来越大。如果 train loss 降、val loss 升，说明过拟合；如果两者都不降，可能学习率、数据或 loss mask 有问题。这个项目里 val loss 持续下降，所以训练是有效的。
+
+15. 如何判断过拟合？
+答：看几个信号：train loss 持续下降但 val loss 反弹；验证集 F1 或 exact match 下降；输出开始机械复读训练格式；对未见 topic 泛化变差。结构化任务里还要看幻觉字段率和缺字段率是否恶化。
+
+16. 为什么不用 QLoRA？
+答：Qwen2.5-1.5B 在当前单卡上用 FP16 LoRA 已经能训通，显存不是主要瓶颈。QLoRA 会引入 4-bit 量化、反量化和数值误差，工程复杂度更高。这个项目优先保证链路清晰和结果可解释，所以没有一开始上 QLoRA。
+
+17. 为什么选择 Qwen2.5-1.5B？
+答：它中文能力强，已经有 instruct 能力，ChatML 模板和 HF/PEFT/vLLM 生态成熟；1.5B 又足够小，单卡可训练和部署。对简历项目来说，它的规模、能力和工程可控性比较平衡。
+
+18. LoRA 到底是加在哪里的？
+答：加在线性投影层上。Qwen 里具体是每层 attention 的 q_proj、k_proj、v_proj、o_proj，把原 Linear 包成带低秩增量的 LoRA Linear；原权重冻结，只训练 A/B 矩阵。
+
+五、结构化信息抽取评测
+
+1. JSON F1 是怎么计算的？
+答：先把模型输出解析成 JSON，解析失败直接记 0。解析成功后把 JSON flatten 成字段路径集合或 key-value pair 集合，再和 gold JSON 比较 TP/FP/FN，最后算 precision、recall、F1。字段级更宽松，pair 级更严格。
+
+2. 字段级 F1 是什么意思？
+答：字段级 F1 主要看字段路径是否匹配，比如某个实体下有没有“出生日期”“位于”等字段，不一定要求值完全正确。它衡量模型是否抽到了该抽的槽位。Pair F1 则把字段和值一起比较，更接近内容正确性。
+
+3. precision、recall、F1 分别是多少？
+答：最新 200 条 valid JSONL 评测里，Field Precision=0.875、Field Recall=0.734、Field F1=0.784；Pair Precision=0.780、Pair Recall=0.624、Pair F1=0.673。如果引用题单里那版 hardcase 指标，就是 base F1 0.057、LoRA 后 0.541。
+
+4. 为什么 base 只有 0.057？
+答：base Qwen 虽然会输出 JSON，但没有针对 InstructIE 的实体嵌套格式和字段体系做 SFT。它容易输出语义相关但 schema 不匹配的字段，或者输出英文/扁平结构，严格 pair F1 就会很低。
+
+5. 为什么 LoRA 后是 0.541，而不是更高？
+答：因为评测是结构化精确匹配，错误来源很多：实体边界不一致、字段 alias 不一致、列表顺序和值规范化、长尾 topic、复杂关系漏抽。LoRA 主要学到了结构化风格和字段倾向，但还没有解决所有语义抽取问题。
+
+6. 9.4 倍提升怎么算的？
+答：就是 LoRA F1 / base F1。按题单数字算是 0.541 / 0.057 = 9.49，约等于 9.4 倍。面试里我会说这是相对提升，绝对值仍然要单独解释。
+
+7. 评测样本多少？
+答：项目里有几套评测。四模型结构化 prompt 评测是 40 条；部署稳定性也是 40 条；最新 valid JSONL 内容级评测抽了 200 条；hardcase 对比是 17 条难例。不同指标要说明对应样本集。
+
+8. 测试集有没有见过？
+答：训练不会用验证集和测试集。pipeline 里先做跨集重复过滤，最终 valid 从 SFT 候选集中独立切分，不参与训练。只能说处理了精确重复泄露，近似语义重复需要额外相似度去重才更严格。
+
+9. 字段值部分匹配怎么算？
+答：主指标里不做宽松部分匹配，字段值必须规范化后完全匹配才算 pair 命中。这样比较严格但可复现。部分匹配可以作为辅助指标，比如字符串 overlap 或 token-level F1，但我不会把它作为主结果。
+
+10. JSON 格式错误怎么算？
+答：json.loads 解析失败就算 parse=false，Field F1 和 Pair F1 记 0，同时计入格式错误。结构化任务里格式合法是第一道门槛，Parse% 不过，后面的字段质量没有意义。
+
+11. 如果字段顺序不同怎么算？
+答：不影响。因为解析成 JSON 后会转成集合或路径集合比较，字典顺序不会进入评分。列表顺序如果语义上无序，最好先做排序或集合化；当前主评测更偏严格。
+
+12. 如果模型多输出字段怎么算？
+答：多出的字段算 FP，会降低 precision，也会进入 hallucination/extra fields 指标。比如 gold 只要求“位于”和“面积”，模型额外输出“历史”“人口”，这些就算幻觉字段。
+
+13. 如果字段名对了，字段值错了怎么算？
+答：字段级 F1 可能算对，因为槽位出现了；但 Pair F1 会算错，因为 key-value pair 不匹配。Exact Match 也会失败。所以我会同时报告 Field F1 和 Pair F1，避免只看字段名造成乐观判断。
+
+14. 有没有人工评估？
+答：通用生成部分有人工维度评分，用来比较 pretrain、SFT、LoRA 的聊天质量。结构化抽取主线主要用自动评测，因为 JSON 合法性、字段、pair 都可以客观计算；同时会对失败样本做人工 spot check 来分析错误类型。
+
+15. 有没有和正则、规则抽取 baseline 对比？
+答：没有把规则 baseline 作为主结果。原因是 InstructIE 覆盖多 topic、多 schema，规则系统需要大量人工模板，泛化性差。面试里我会承认这是可以补的 baseline：对少数固定 schema，规则可能很强；但项目重点是模型式 schema-following 的泛化。
+
+16. 有没有 ablation，比如无清洗数据、无 LoRA、不同 rank？
+答：有一部分 ablation：base vs LoRA、MicroLM 全参 SFT vs MicroLM LoRA、hardcase refinement 对比、部署前后稳定性对比。没有系统跑完整的无清洗数据和不同 rank 网格，这是后续可补的实验。
+
+17. F1 从 0.057 到 0.541，0.541 其实不高，你怎么解释？
+答：我会承认它不是生产级指标。它的价值在于证明 LoRA 对结构化行为有显著提升，但 0.541 说明仍有大量实体边界、字段 alias、值规范化问题。这个项目更像从 0 到 1 打通训练-评测-部署闭环，而不是宣称已经达到线上强抽取系统。
+
+18. Qwen 本身很强，为什么 base 只有 0.057？
+答：强通用模型不等于强特定 schema 抽取。base Qwen 能理解文本，也常能输出合法 JSON，但它没有学过项目定义的 InstructIE 输出风格、字段命名和实体嵌套格式。严格评分下，格式和字段稍微不一致就会掉分。
+
+19. 0.541 F1 是否足够上线？
+答：不适合无人值守上线。如果是演示、低风险辅助抽取、人工审核前置，可以用；如果要生产级自动写库，还需要后处理、schema alias 归一化、置信度、人工兜底，以及更高的 Pair F1 和 Exact Match。
+
+六、vLLM / KV Cache / 推理加速
+
+1. KV cache 是什么？
+答：KV cache 是每层 attention 对历史 token 的 Key 和 Value 缓存。生成第 t 个 token 后，把它的 K/V 存下来；生成第 t+1 个 token 时直接复用历史 K/V，不再重算整个 prefix。
+
+2. 为什么 KV cache 能加速？
+答：没有 cache 时，每生成一个 token 都要把越来越长的完整序列重新前向一遍；有 cache 后，decode 每步只处理新 token，并和缓存的历史 K/V 做 attention。它消除了大量重复计算，序列越长收益越明显。
+
+3. prefill 和 decode 阶段有什么区别？
+答：prefill 是一次性处理完整 prompt，计算并填充 KV cache，主要成本随输入长度增长。decode 是逐 token 生成，每步只输入一个 token，复用 cache，主要决定输出吞吐。
+
+4. 3.86x 是怎么测出来的？
+答：用同一个 MicroLM checkpoint，对比 no-cache generate 和 cache generate 的 wall-clock 时间。测试 5 个 prompt 长度 16/32/64/128/256 和 4 个生成长度 32/64/128/256，共 20 组，每组预热 1 次、正式跑 3 次取平均，最后平均加速比是 3.86x，最大 9.08x。
+
+5. 测试条件是什么？
+答：KV Cache benchmark 用的是 outputs/sft_baseline/ckpt_final.pt，device=CPU，dtype=float32，vocab=6400，d_model=512，8 层，context length=512。这个 benchmark 测的是算法层面的 cache 加速，不是 GPU 服务吞吐。
+
+6. 输入输出长度是多少？
+答：输入 prompt 长度覆盖 16、32、64、128、256 tokens；生成长度覆盖 32、64、128、256 tokens。最长组合是 prompt=256、gen=256，这组加速比最高，达到 9.08x。
+
+7. batch size 是多少？
+答：KV Cache benchmark 是单请求 batch size=1，目的是隔离 cache 对单条自回归生成的加速效果。vLLM benchmark 另测了并发服务性能。
+
+8. 只测单请求还是并发？
+答：自研 KV Cache 的 3.86x 是单请求算法 benchmark。vLLM 部署另做了单请求和多并发 benchmark，4 并发和 8 并发都能稳定完成，错误数为 0。
+
+9. vLLM 为什么快？
+答：vLLM 快主要来自系统层优化：PagedAttention 管理 KV cache、continuous batching 合并不同请求、CUDA graph/高效 attention kernel 减少调度开销，并且提供 OpenAI 兼容服务接口，适合在线多请求场景。
+
+10. PagedAttention 是什么？
+答：PagedAttention 是 vLLM 的 KV cache 管理机制，把 KV cache 像操作系统分页一样按 block 管理。它减少了连续大块显存分配和碎片问题，让不同请求的 KV cache 能更高效复用显存。
+
+11. continuous batching 是什么？
+答：continuous batching 是连续动态批处理。传统 batching 要等一批请求一起开始一起结束；continuous batching 可以在每个 decode step 动态加入新请求、移除完成请求，提高 GPU 利用率，特别适合在线服务。
+
+12. vLLM 和 transformers generate 有什么区别？
+答：transformers generate 更适合离线调试和单请求脚本，逻辑简单但并发和 KV 管理一般。vLLM 是服务化推理引擎，内置高效 KV cache、动态 batching、OpenAI API、吞吐和显存优化，更适合部署。
+
+13. vLLM 部署时怎么暴露接口？
+答：项目里用 serve_vllm.sh 启动 vLLM OpenAI-compatible server，默认加载 outputs/qwen_lora_merged_final，监听 HTTP 端口。客户端可以按 /v1/chat/completions 方式调用，也可以跑 smoke_vllm.py 做健康检查。
+
+14. smoke 5/5 是什么意思？
+答：smoke test 设计了 5 个最小功能检查：health check、simple chat、structured extraction、multi-turn、response_format=json_object。5/5 表示这五项全部通过，说明服务从启动到核心调用链路是通的。
+
+15. parse 100% 是什么意思？
+答：表示稳定性验证里模型输出都能被解析成合法 JSON。它只说明格式稳定，不代表字段完全正确；所以还要看 Strict%、Alias-Strict%、Exact Match、Field F1 和 Pair F1。
+
+16. 在线部署时如何处理超时？
+答：服务侧限制 max_model_len 和 max_tokens，客户端设置请求 timeout；超过时间可以返回失败或降级结果。生产里还会加队列限流、并发上限、重试策略，以及对长输入提前截断或拒绝。
+
+17. 如何限制最大生成长度？
+答：推理请求里设置 max_tokens 或 max_new_tokens，vLLM 启动时还可以设置 max_model_len。结构化抽取任务一般输出较短 JSON，所以会把 max_tokens 控制在合理范围，避免无限生成和延迟失控。
+
+18. KV cache 会不会增加显存占用？
+答：会。KV cache 用空间换时间，缓存每层、每个历史 token 的 K/V，显存随 batch size、序列长度、层数、head 维度增长。vLLM 的 PagedAttention 就是为了解决 KV cache 显存管理和碎片问题。

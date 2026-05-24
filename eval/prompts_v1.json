@@ -113,6 +113,13 @@
       ]
     },
     {
+      "id": "expr_08",
+      "category": "中文表达与总结",
+      "conversations": [
+        {"role": "user", "content": "请用两句话说明为什么要保护环境。"}
+      ]
+    },
+    {
       "id": "instr_01",
       "category": "指令遵循",
       "conversations": [
@@ -151,7 +158,7 @@
       "id": "instr_06",
       "category": "指令遵循",
       "conversations": [
-        {"role": "user", "content": "请列出五个以"春"字开头的成语。"}
+        {"role": "user", "content": "请列出五个以\"春\"字开头的成语。"}
       ]
     },
     {
@@ -159,6 +166,13 @@
       "category": "指令遵循",
       "conversations": [
         {"role": "user", "content": "请用三个形容词描述大海。"}
+      ]
+    },
+    {
+      "id": "instr_08",
+      "category": "指令遵循",
+      "conversations": [
+        {"role": "user", "content": "请把下面三个词按拼音首字母排序：苹果、香蕉、橙子。"}
       ]
     },
     {
@@ -213,6 +227,24 @@
         {"role": "user", "content": "中国有多少个省级行政区？"},
         {"role": "assistant", "content": "中国共有34个省级行政区，包括23个省、5个自治区、4个直辖市和2个特别行政区。"},
         {"role": "user", "content": "其中四个直辖市分别是哪里？"}
+      ]
+    },
+    {
+      "id": "multi_07",
+      "category": "多轮对话",
+      "conversations": [
+        {"role": "user", "content": "我想做一道番茄炒蛋，需要准备什么？"},
+        {"role": "assistant", "content": "通常需要番茄、鸡蛋、盐、少量糖和食用油。"},
+        {"role": "user", "content": "如果我不吃糖，可以怎么调整？"}
+      ]
+    },
+    {
+      "id": "multi_08",
+      "category": "多轮对话",
+      "conversations": [
+        {"role": "user", "content": "什么是机器学习？"},
+        {"role": "assistant", "content": "机器学习是让计算机从数据中学习规律并进行预测或决策的方法。"},
+        {"role": "user", "content": "它和人工智能是什么关系？"}
       ]
     },
     {

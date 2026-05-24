@@ -29,13 +29,16 @@
     "save_interval": 200,
     "device": "cuda",
     "seed": 42,
+    "num_workers": 8,
+    "prefetch_factor": 4,
+    "pin_memory": true,
     "out_dir": "outputs/sft_baseline",
     "init_checkpoint": "outputs/pretrain_full_corpus/ckpt_final.pt",
     "resume": false
   },
   "data": {
     "train_data_path": "data/minimind_sft/gongjy/minimind_dataset/sft_t2t_mini.jsonl",
-    "valid_data_path": "data/minimind_sft/gongjy/minimind_dataset/sft_t2t_mini.jsonl",
+    "valid_data_path": "data/minimind_sft/gongjy/minimind_dataset/sft_t2t_valid_1000.jsonl",
     "system_prompt_ratio": 0.1,
     "eos_token": "<|endoftext|>"
   },

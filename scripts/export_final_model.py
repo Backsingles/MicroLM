@@ -157,6 +157,10 @@ def main():
         help="Which adaptor to use (default: adaptor_final)",
     )
     parser.add_argument(
+        "--adaptor-path", type=Path, default=None,
+        help="Explicit LoRA adaptor directory. Overrides --adaptor when provided.",
+    )
+    parser.add_argument(
         "--output-dir", type=Path, default=OUTPUT_DIR,
         help="Output directory for merged model",
     )
@@ -168,7 +172,7 @@ def main():
 
     check_dependencies()
 
-    adaptor_path = QWEN_LORA_DIR / args.adaptor
+    adaptor_path = args.adaptor_path if args.adaptor_path is not None else QWEN_LORA_DIR / args.adaptor
     metadata = export_merged_model(
         base_path=args.base_model,
         adaptor_path=adaptor_path,

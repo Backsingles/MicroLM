@@ -1,0 +1,4 @@
+round,mode,total,parse_rate,strict_rate,alias_strict_rate,projected_strict_rate,projected_alias_strict_rate,extraction_P,extraction_S,extraction_A,extraction_projected,extraction_projected_alias,schema_P,schema_S,schema_A,schema_projected,schema_projected_alias,format_P,format_S,format_A,format_projected,format_projected_alias,avg_latency_s
+Round 1: Normal Chat Completion,normal,40,1.0,0.0,0.0,0.2,0.375,1.0,0.0,0.0,0.1667,0.4444,1.0,0.0,0.0,0.0833,0.25,1.0,0.0,0.0,0.4,0.4,2.497
+Round 2: Constrained (response_format=json_object),constrained,40,1.0,0.0,0.0,0.2,0.375,1.0,0.0,0.0,0.1667,0.4444,1.0,0.0,0.0,0.0833,0.25,1.0,0.0,0.0,0.4,0.4,2.49
+Round 3: Schema-Strict Constrained,schema_strict,40,1.0,0.525,0.525,0.7,0.7,1.0,0.4444,0.4444,0.8333,0.8333,1.0,0.75,0.75,0.5833,0.5833,1.0,0.4,0.4,0.6,0.6,2.452

@@ -1,6 +1,7 @@
 import argparse
 import json
 import os
+import time
 
 import torch
 import numpy as np
@@ -221,6 +222,7 @@ def main():
         mode=args.wandb_mode,
         config=resolved_config,
     )
+    log_path = os.path.join(args.out_dir, "train_log.jsonl")
 
     for it in range(start_iter, args.max_iters):
         lr = get_lr_cosine_schedule(it, args.lr, args.min_lr, args.warmup_iters, args.max_iters)
@@ -243,6 +245,21 @@ def main():
                 v_logits = model(vx)
                 v_loss = cross_entropy(v_logits, vy)
                 print(f"Iter {it}: train_loss {loss.item():.4f}, val_loss {v_loss.item():.4f}, lr {lr:.2e}")
+                with open(log_path, "a", encoding="utf-8") as f:
+                    f.write(
+                        json.dumps(
+                            {
+                                "iter": it,
+                                "step": it + 1,
+                                "train_loss": float(loss.item()),
+                                "val_loss": float(v_loss.item()),
+                                "lr": float(lr),
+                                "timestamp": time.time(),
+                            },
+                            ensure_ascii=False,
+                        )
+                        + "\n"
+                    )
                 wandb.log(
                     {
                         "train/loss": loss.item(),

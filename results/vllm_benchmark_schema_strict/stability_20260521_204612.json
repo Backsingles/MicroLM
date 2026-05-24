@@ -1,0 +1,79 @@
+{
+  "check_config": {
+    "base_url": "http://localhost:8000",
+    "eval_file": "E:\\MicroLM\\eval\\prompts_instructie.json",
+    "timestamp": "2026-05-21 20:46:12",
+    "rounds": 3
+  },
+  "rounds": [
+    {
+      "round": "Round 1: Normal Chat Completion",
+      "mode": "normal",
+      "total": 5,
+      "parse_rate": 1.0,
+      "strict_rate": 0.0,
+      "alias_strict_rate": 0.0,
+      "projected_strict_rate": 0.0,
+      "projected_alias_strict_rate": 0.6,
+      "by_group": {
+        "extraction": {
+          "total": 5,
+          "parse_rate": 1.0,
+          "strict_rate": 0.0,
+          "alias_strict_rate": 0.0,
+          "projected_strict_rate": 0.0,
+          "projected_alias_strict_rate": 0.6
+        }
+      },
+      "avg_latency_s": 2.532
+    },
+    {
+      "round": "Round 2: Constrained (response_format=json_object)",
+      "mode": "constrained",
+      "total": 5,
+      "parse_rate": 1.0,
+      "strict_rate": 0.0,
+      "alias_strict_rate": 0.0,
+      "projected_strict_rate": 0.0,
+      "projected_alias_strict_rate": 0.6,
+      "by_group": {
+        "extraction": {
+          "total": 5,
+          "parse_rate": 1.0,
+          "strict_rate": 0.0,
+          "alias_strict_rate": 0.0,
+          "projected_strict_rate": 0.0,
+          "projected_alias_strict_rate": 0.6
+        }
+      },
+      "avg_latency_s": 2.553
+    },
+    {
+      "round": "Round 3: Schema-Strict Constrained",
+      "mode": "schema_strict",
+      "total": 5,
+      "parse_rate": 1.0,
+      "strict_rate": 0.2,
+      "alias_strict_rate": 0.2,
+      "projected_strict_rate": 0.6,
+      "projected_alias_strict_rate": 0.6,
+      "by_group": {
+        "extraction": {
+          "total": 5,
+          "parse_rate": 1.0,
+          "strict_rate": 0.2,
+          "alias_strict_rate": 0.2,
+          "projected_strict_rate": 0.6,
+          "projected_alias_strict_rate": 0.6
+        }
+      },
+      "avg_latency_s": 2.392
+    }
+  ],
+  "reference_6c_offline": {
+    "model": "qwen_lora",
+    "parse_rate": 0.975,
+    "strict_rate": 0.075,
+    "alias_strict_rate": 0.15
+  }
+}

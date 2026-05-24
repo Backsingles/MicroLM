@@ -23,7 +23,7 @@
   "training": {
     "batch_size": 4,
     "max_iters": 20,
-    "device": "cpu",
+    "device": "cuda",
     "seed": 42,
     "out_dir": "outputs/pretrain_smoke"
   },

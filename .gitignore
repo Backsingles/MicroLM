@@ -29,6 +29,16 @@ data/sft_t2t_mini_smoke_candidate/
 out/
 outputs/
 
+# Local VM / installer artifacts
+.wsl/
+downloads/
+*.vhdx
+*.msixbundle
+*.rootfs.tar.gz
+
+# Oversized captured terminal logs
+reports/terminal_outputs.md
+
 # Experiment tracking
 wandb/
 

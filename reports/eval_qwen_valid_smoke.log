@@ -1,0 +1,68 @@
+﻿
+Loading model: outputs\qwen_lora_merged_final
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+System.Management.Automation.RemoteException
+Loading weights:   0%|          | 0/338 [00:00<?, ?it/s]
+Loading weights:  17%|█▋        | 59/338 [00:00<00:00, 574.18it/s]
+Loading weights:  47%|████▋     | 159/338 [00:00<00:00, 820.06it/s]
+Loading weights:  75%|███████▌  | 255/338 [00:00<00:00, 872.41it/s]
+Loading weights: 100%|██████████| 338/338 [00:00<00:00, 884.68it/s]
+Evaluating 5 samples from data\sft_candidate\valid.jsonl
+Generation: max_new_tokens=256, temperature=0.0, top_p=1.0
+[0001/5] instructie_schema_repair_028992 parsed=True direct=True exact=True field_f1=1.000 pair_f1=1.000 latency=1.10s
+[0002/5] instructie_text_to_json_018651 parsed=True direct=True exact=False field_f1=0.875 pair_f1=0.909 latency=1.33s
+[0003/5] instructie_ie_extraction_010893 parsed=True direct=True exact=False field_f1=0.727 pair_f1=0.667 latency=1.03s
+[0004/5] instructie_format_following_025599 parsed=True direct=True exact=True field_f1=1.000 pair_f1=1.000 latency=1.49s
+[0005/5] instructie_ie_extraction_011377 parsed=True direct=True exact=False field_f1=0.500 pair_f1=0.364 latency=1.14s
+
+SUMMARY
+{
+  "model_path": "outputs\\qwen_lora_merged_final",
+  "data_path": "data\\sft_candidate\\valid.jsonl",
+  "sample_count": 5,
+  "seed": 42,
+  "max_new_tokens": 256,
+  "temperature": 0.0,
+  "top_p": 1.0,
+  "parseable_rate": 1.0,
+  "direct_json_rate": 1.0,
+  "markdown_fence_rate": 0.0,
+  "exact_match_rate": 0.4,
+  "avg_field_precision": 0.8799999999999999,
+  "avg_field_recall": 0.7746031746031745,
+  "avg_field_f1": 0.8204545454545453,
+  "avg_pair_precision": 0.8300000000000001,
+  "avg_pair_recall": 0.7533333333333334,
+  "avg_pair_f1": 0.7878787878787878,
+  "avg_latency_sec": 1.2180943489074707,
+  "by_task": {
+    "format_following": {
+      "total": 1,
+      "parseable_rate": 1.0,
+      "direct_json_rate": 1.0,
+      "exact_match_rate": 1.0
+    },
+    "ie_extraction": {
+      "total": 2,
+      "parseable_rate": 1.0,
+      "direct_json_rate": 1.0,
+      "exact_match_rate": 0.0
+    },
+    "schema_repair": {
+      "total": 1,
+      "parseable_rate": 1.0,
+      "direct_json_rate": 1.0,
+      "exact_match_rate": 1.0
+    },
+    "text_to_json": {
+      "total": 1,
+      "parseable_rate": 1.0,
+      "direct_json_rate": 1.0,
+      "exact_match_rate": 0.0
+    }
+  }
+}
+
+Saved summary to results\qwen_valid_eval_smoke\summary.json
+Saved detailed results to results\qwen_valid_eval_smoke\results.jsonl
+Saved failure samples to results\qwen_valid_eval_smoke\failure_samples.jsonl

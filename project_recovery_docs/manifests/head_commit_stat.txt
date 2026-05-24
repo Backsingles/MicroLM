@@ -1,0 +1,181 @@
+﻿88c5dff (HEAD -> main) chore: commit project updates
+ .vscode/settings.json                              |       8 +
+ .wsl/MicroLM-Ubuntu/ext4.vhdx                      |     Bin 0 -> 249561088 bytes
+ "MicroLM\346\213\267\346\211\223.txt"              |     319 +
+ ...47\240\224 MicroLM \344\270\273\347\272\277.md" |       1 +
+ ...203\275\345\212\233\345\242\236\345\274\272.md" |       1 +
+ ...276\223\345\207\272\344\270\273\347\272\277.md" |       3 +
+ ...203\250\347\275\262\351\227\255\347\216\257.md" |       3 +
+ configs/pretrain_smoke.json                        |       2 +-
+ configs/qwen_lora_refine_hardcases.json            |      39 +
+ configs/sft_baseline.json                          |       5 +-
+ configs/sft_lora.json                              |      57 +-
+ configs/sft_valid_0p5_step1000.json                |      50 +
+ configs/tokenize_full_corpus.json                  |       3 +-
+ data/qwen_refine/eval_holdout.jsonl                |     200 +
+ data/qwen_refine/hardcases_once.jsonl              |      17 +
+ data/qwen_refine/metadata.json                     |      36 +
+ data/qwen_refine/train.jsonl                       |    1500 +
+ data/qwen_refine/valid.jsonl                       |     200 +
+ docs/vllm_deploy.md                                |     254 +
+ .../Microsoft.WSL_2.6.3.0_x64_ARM64.msixbundle     |     Bin 0 -> 496210829 bytes
+ .../ubuntu-noble-wsl-amd64-24.04lts.rootfs.tar.gz  |     Bin 0 -> 356736729 bytes
+ eval/prompts_v1.json                               |      34 +-
+ microlm/structured/__init__.py                     |      19 +
+ microlm/structured/schema_repair.py                |     386 +
+ reports/a1_a2_a3_terminal_log.md                   |     122 +
+ reports/b1_pretrain.exitcode                       |       1 +
+ reports/b1_pretrain.pid                            |       1 +
+ reports/b1_pretrain_combined.log                   |     Bin 0 -> 61182 bytes
+ reports/b1_pretrain_status.txt                     |       2 +
+ reports/b1_pretrain_stderr.log                     |       0
+ reports/b1_pretrain_stdout.log                     |       0
+ reports/b2_sft.exitcode                            |       1 +
+ reports/b2_sft_combined.log                        |     Bin 0 -> 2038 bytes
+ reports/b2_sft_workers_probe.exitcode              |       1 +
+ reports/b2_sft_workers_probe.log                   |     Bin 0 -> 412 bytes
+ reports/b3_sft_lora.exitcode                       |       1 +
+ reports/b3_sft_lora.log                            |     Bin 0 -> 3828 bytes
+ reports/b3_sft_lora_0p5.exitcode                   |       1 +
+ reports/b3_sft_lora_0p5.log                        |      27 +
+ reports/b3_sft_lora_0p5.pid                        |       1 +
+ reports/c0_download_qwen.exitcode                  |       1 +
+ reports/c0_download_qwen.log                       |      13 +
+ reports/c0_verify.log                              |      30 +
+ reports/c1_instructie_pipeline.exitcode            |       1 +
+ reports/c1_instructie_pipeline.log                 |     345 +
+ reports/c1_verify.log                              |      82 +
+ reports/chat_smoke_input.txt                       |       4 +
+ reports/chat_smoke_session_utf8.jsonl              |       2 +
+ reports/d1_qwen_lora.exitcode                      |       1 +
+ reports/d1_qwen_lora.pid                           |       1 +
+ reports/d1_qwen_lora.stderr.log                    |       2 +
+ reports/d1_qwen_lora.stdout.log                    |      60 +
+ reports/d1_verify.log                              |     167 +
+ reports/d2_export_final_model.exitcode             |       1 +
+ reports/d2_export_final_model.log                  |      33 +
+ reports/d2_verify.log                              |      45 +
+ reports/derive_report.json                         |      32 +
+ reports/eval_deploy_closure.md                     |     214 +
+ reports/eval_instructie_qwen.exitcode              |       1 +
+ reports/eval_instructie_qwen.log                   |      20 +
+ reports/eval_instructie_qwen_utf8.exitcode         |       1 +
+ reports/eval_instructie_qwen_utf8.log              |     282 +
+ reports/eval_qwen_valid_200.exitcode               |       1 +
+ reports/eval_qwen_valid_200.log                    |     263 +
+ reports/eval_qwen_valid_smoke.exitcode             |       1 +
+ reports/eval_qwen_valid_smoke.log                  |      68 +
+ reports/eval_summary.log                           |     196 +
+ reports/filter_report.json                         |     348 +
+ reports/generate_text_smoke_conversation.json      |       6 +
+ reports/inference_system_closure.md                |     124 +
+ reports/interview_qa_qwen_microlm.md               |     272 +
+ reports/live_loss_server.js                        |     358 +
+ reports/microlm_capability_boundary.md             |     123 +
+ reports/normalize_report.json                      |      16 +
+ reports/project_technical_report.md                |    1047 +
+ reports/quality_report.json                        |      78 +
+ reports/qwen_migration_structured_closure.md       |     225 +
+ reports/qwen_refine_build_data.exitcode            |       1 +
+ reports/qwen_refine_build_data.log                 |      37 +
+ reports/qwen_refine_compare_eval.exitcode          |       1 +
+ reports/qwen_refine_compare_eval.log               |     716 +
+ reports/qwen_refine_comparison_summary.log         |      57 +
+ reports/qwen_refine_export_best.exitcode           |       1 +
+ reports/qwen_refine_export_best.log                |      33 +
+ reports/qwen_refine_train.exitcode                 |       1 +
+ reports/qwen_refine_train.log                      |      35 +
+ reports/run_b1_pretrain.cmd                        |       8 +
+ reports/run_b3_sft_lora.ps1                        |      34 +
+ reports/run_c1_pipeline.ps1                        |      80 +
+ reports/sample_report.json                         |      40 +
+ reports/schema_strict_improvement_report.md        |     122 +
+ reports/sft_candidate_report.md                    |     117 +
+ reports/sft_valid_0p5_step1000.exitcode            |       1 +
+ reports/sft_valid_0p5_step1000.log                 |     Bin 0 -> 2164 bytes
+ reports/spotcheck_samples.jsonl                    |      20 +
+ reports/start_b1_pretrain.js                       |      42 +
+ reports/start_loss_dashboard.cmd                   |       3 +
+ reports/terminal_outputs.md                        | 3746647 +++++++++++++++++
+ reports/terminal_outputs_eval_deploy.md            |    3298 +
+ reports/terminal_outputs_inference_system.md       |     Bin 0 -> 93833 bytes
+ reports/terminal_outputs_microlm_boundary.md       |     Bin 0 -> 23789 bytes
+ reports/terminal_outputs_next_step.md              |     Bin 0 -> 107602 bytes
+ reports/terminal_outputs_qwen_structured.md        |     Bin 0 -> 142440 bytes
+ reports/terminal_outputs_recovery.md               |      40 +
+ reports/terminal_outputs_schema_strict.md          |    2798 +
+ reports/terminal_outputs_vllm_env.md               |     Bin 0 -> 693287 bytes
+ reports/vllm_benchmark_report.md                   |     112 +
+ reports/vllm_server_wsl.log                        |     285 +
+ reports/vllm_server_wsl_no_flashinfer.log          |     974 +
+ reports/vllm_wsl_admin_install.log                 |     Bin 0 -> 4694 bytes
+ reports/vllm_wsl_appx_install.log                  |     Bin 0 -> 740 bytes
+ reports/vllm_wsl_setup.log                         |    1700 +
+ .../raw_outputs/qwen_base.json                     |     242 +
+ .../raw_outputs/qwen_lora.json                     |     242 +
+ .../scored_results/qwen_base_scored.json           |    1149 +
+ .../scored_results/qwen_lora_scored.json           |    1141 +
+ results/instructie_eval_qwen/summary/by_group.json |      60 +
+ results/instructie_eval_qwen/summary/by_model.json |      34 +
+ results/instructie_eval_qwen/summary/detailed.csv  |     475 +
+ .../instructie_eval_qwen/summary/leaderboard.json  |      20 +
+ results/lora_vs_full_sft_v1/eval_results.json      |    1673 +
+ .../original_hardcases/failure_samples.jsonl       |      17 +
+ .../original_hardcases/results.jsonl               |      17 +
+ .../original_hardcases/summary.json                |      40 +
+ .../original_holdout/failure_samples.jsonl         |      15 +
+ .../original_holdout/results.jsonl                 |     200 +
+ .../original_holdout/summary.json                  |      46 +
+ .../refined_hardcases/failure_samples.jsonl        |      17 +
+ .../refined_hardcases/results.jsonl                |      17 +
+ .../refined_hardcases/summary.json                 |      40 +
+ .../refined_holdout/failure_samples.jsonl          |      16 +
+ .../refined_holdout/results.jsonl                  |     200 +
+ .../refined_holdout/summary.json                   |      46 +
+ results/qwen_valid_eval_200/failure_samples.jsonl  |      17 +
+ results/qwen_valid_eval_200/results.jsonl          |     200 +
+ results/qwen_valid_eval_200/summary.json           |      46 +
+ .../qwen_valid_eval_smoke/failure_samples.jsonl    |       0
+ results/qwen_valid_eval_smoke/results.jsonl        |       5 +
+ results/qwen_valid_eval_smoke/summary.json         |      46 +
+ .../vllm_benchmark/benchmark_20260521_183849.json  |     120 +
+ .../benchmark_summary_20260521_183849.csv          |       6 +
+ results/vllm_benchmark/smoke_results_current.json  |      43 +
+ .../smoke_results_qwen_structured.json             |      43 +
+ .../vllm_benchmark/stability_20260521_184306.json  |      74 +
+ .../stability_summary_20260521_184306.csv          |       3 +
+ .../repaired_outputs_20260521.jsonl                |      40 +
+ .../repaired_outputs_20260521_enhanced.jsonl       |      40 +
+ .../self_repair_outputs_20260521.jsonl             |      40 +
+ .../self_repair_outputs_20260521_v2.jsonl          |      40 +
+ .../self_repair_outputs_20260521_v3.jsonl          |      40 +
+ .../self_repair_quick_5.jsonl                      |       5 +
+ .../single_repaired_example.jsonl                  |       1 +
+ .../stability_20260521_204245.json                 |      79 +
+ .../stability_20260521_204612.json                 |      79 +
+ .../stability_20260521_205135.json                 |     127 +
+ .../stability_20260521_211457.json                 |     127 +
+ .../stability_summary_20260521_204245.csv          |       4 +
+ .../stability_summary_20260521_204612.csv          |       4 +
+ .../stability_summary_20260521_205135.csv          |       4 +
+ .../stability_summary_20260521_211457.csv          |       4 +
+ scripts/build_qwen_refine_data.py                  |     111 +
+ scripts/check_structured_stability.py              |     182 +-
+ scripts/download_c0_qwen.py                        |      30 +
+ scripts/evaluate_qwen_valid_jsonl.py               |     344 +
+ scripts/export_final_model.py                      |       6 +-
+ scripts/generate_text.py                           |      14 +-
+ scripts/serve_vllm.sh                              |      40 +-
+ scripts/setup_vllm_ubuntu.sh                       |      73 +
+ scripts/setup_vllm_wsl_admin.ps1                   |      37 +
+ scripts/start_vllm_wsl.ps1                         |      24 +
+ scripts/structured_vllm_client.py                  |     330 +
+ scripts/summarize_eval_results.py                  |      42 +
+ scripts/summarize_refine_comparison.py             |      54 +
+ scripts/tokenize_corpus.py                         |     243 +-
+ scripts/train_pretrain.py                          |      17 +
+ scripts/train_qwen_lora.py                         |      44 +-
+ scripts/train_sft.py                               |      74 +-
+ scripts/watch_loss.py                              |     395 +
+ tests/test_watch_loss.py                           |      43 +
+ 179 files changed, 3773950 insertions(+), 59 deletions(-)

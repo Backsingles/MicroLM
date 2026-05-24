@@ -1,0 +1,282 @@
+﻿
+Eval params: temp=0.0, top_p=1.0, max_tokens=256, seed=42
+Total prompts: 40
+
+============================================================
+Evaluating: qwen_base (backend=qwen)
+============================================================
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+System.Management.Automation.RemoteException
+Loading weights:   0%|          | 0/338 [00:00<?, ?it/s]
+Loading weights:  30%|██▉       | 100/338 [00:00<00:00, 982.84it/s]
+Loading weights:  59%|█████▉    | 199/338 [00:00<00:00, 950.24it/s]
+Loading weights:  90%|████████▉ | 303/338 [00:00<00:00, 966.65it/s]
+Loading weights: 100%|██████████| 338/338 [00:00<00:00, 974.20it/s]
+  [extr] ext_001: parsed=✓ strict=✗ alias=✗ | ```json
+{
+  "name": "鲁迅",
+  "original_name": "周树人",
+  "birth...
+  [extr] ext_002: parsed=✓ strict=✗ alias=✗ | ```json
+{
+  "location": {
+    "province": "浙江",
+    "city": ...
+  [extr] ext_003: parsed=✓ strict=✗ alias=✗ | ```json
+{
+  "公司": {
+    "名称": "阿里巴巴集团",
+    "创始人": "马云"
+  },...
+  [extr] ext_004: parsed=✓ strict=✗ alias=✗ | ```json
+{
+  "schema": {
+    "药物名称": ["青霉素"],
+    "发现者": ["亚历...
+  [extr] ext_005: parsed=✓ strict=✗ alias=✗ | ```json
+{
+  "地点": {
+    "名称": "埃菲尔铁塔",
+    "位置": "法国巴黎战神广场"
+...
+  [extr] ext_006: parsed=✓ strict=✗ alias=✗ | ```json
+{
+  "赛事名称": "2008年北京夏季奥林匹克运动会",
+  "举办时间": {
+    "开始日...
+  [extr] ext_007: parsed=✓ strict=✗ alias=✗ | ```json
+{
+  "疾病": {
+    "名称": "糖尿病",
+    "特点": [
+      "高血糖"...
+  [extr] ext_008: parsed=✓ strict=✗ alias=✗ | ```json
+{
+  "车站名称": "上海虹桥站",
+  "位置": {
+    "城市": "上海市",
+    ...
+  [extr] ext_009: parsed=✓ strict=✗ alias=✗ | ```json
+{
+  "宝剑": {
+    "类型": "古代兵器",
+    "材料": ["铁", "钢"],
+...
+  [extr] ext_010: parsed=✓ strict=✗ alias=✗ | ```json
+{
+  "作品名称": "三体",
+  "作者": "刘慈欣",
+  "出版社": "重庆出版社",
+ ...
+  [extr] ext_011: parsed=✓ strict=✗ alias=✗ | ```json
+{
+  "大熊猫": {
+    "特有分布地": ["四川", "陕西", "甘肃"],
+    "食...
+  [extr] ext_012: parsed=✓ strict=✗ alias=✗ | ```json
+{
+  "schema": {
+    "name": "木星",
+    "description":...
+  [extr] ext_013: parsed=✓ strict=✗ alias=✗ | ```json
+{
+  "person": {
+    "name": "阿尔伯特·爱因斯坦",
+    "birth_...
+  [extr] ext_014: parsed=✓ strict=✗ alias=✗ | ```json
+{
+  "schema": {
+    "name": "第二次世界大战",
+    "start_da...
+  [extr] ext_015: parsed=✓ strict=✗ alias=✗ | ```json
+{
+  "UN": {
+    "成立于": "1945年10月24日",
+    "地点": "美国纽...
+  [extr] ext_016: parsed=✓ strict=✗ alias=✗ | ```json
+{
+  "schema": {
+    "title": "哈利·波特",
+    "author": ...
+  [extr] ext_017: parsed=✓ strict=✗ alias=✗ | ```json
+{
+  "schema": {
+    "name": "黑火药",
+    "type": "发明",...
+  [extr] ext_018: parsed=✓ strict=✗ alias=✗ | {
+  "name": "长江",
+  "length": {
+    "total_length": 6300,
+  ...
+  [sche] sc_001: parsed=✓ strict=✗ alias=✗ | ```json
+{
+  "name": "姚明",
+  "birthdate": "1980-09-12",
+  "pl...
+  [sche] sc_002: parsed=✓ strict=✗ alias=✗ | {
+  "机构": {
+    "名称": "腾讯公司",
+    "成立时间": "1998年",
+    "创始人"...
+  [sche] sc_003: parsed=✓ strict=✗ alias=✗ | ```json
+{
+  "schema": {
+    "用途": [
+      "宗教"
+    ],
+    "位...
+  [sche] sc_004: parsed=✓ strict=✗ alias=✗ | ```json
+{
+  "schema": {
+    "疾病名称": "肺炎",
+    "症状": [
+      ...
+  [sche] sc_005: parsed=✓ strict=✗ alias=✗ | {
+  "事件": "航天",
+  "时间": "1969年7月20日",
+  "人物": [
+    {
+      ...
+  [sche] sc_006: parsed=✓ strict=✗ alias=✗ | ```json
+{
+  "text": "X射线由德国物理学家威廉·伦琴于1895年发现，又称伦琴射线。X射线广泛应用于...
+  [sche] sc_007: parsed=✓ strict=✗ alias=✗ | {
+  "车站名称": "北京南站",
+  "车站等级": "特等站"
+}
+  [sche] sc_008: parsed=✓ strict=✗ alias=✗ | {
+  "保护级别": "国家一级保护动物"
+}
+  [sche] sc_009: parsed=✓ strict=✗ alias=✗ | {
+  "作者": "加西亚·马尔克斯",
+  "作品名称": "百年孤独",
+  "出版时间": "1967年",
+ ...
+  [sche] sc_010: parsed=✓ strict=✗ alias=✗ | {
+  "schema": {
+    "名称": "火星",
+    "位置": "太阳系",
+    "数量": "...
+  [sche] sc_011: parsed=✓ strict=✗ alias=✗ | {
+  "schema": {
+    "material": "金属",
+    "text": "司南是中国古代的指...
+  [sche] sc_012: parsed=✓ strict=✗ alias=✗ | {
+  "text": "死海位于以色列、约旦和巴勒斯坦交界处，水面海拔约-430米，是地球表面的最低点。",
+  "s...
+  [form] ff_001: parsed=✓ strict=✗ alias=✗ | [
+  {
+    "出生地": "碎叶城"
+  },
+  {
+    "出生日期": "701年"
+  },
+  {
+...
+  [form] ff_002: parsed=✓ strict=✗ alias=✗ | [
+    {
+        "位于": "江西省北部"
+    },
+    {
+        "面积": "31...
+  [form] ff_003: parsed=✓ strict=✓ alias=✓ | ```json
+{
+  "位于": "广东省深圳市",
+  "成立时间": "1987年",
+  "创办者": "任正非...
+  [form] ff_004: parsed=✓ strict=✗ alias=✗ | [{"别名": "", "发现者或发明者": "沃森和克里克", "用途": ""}]
+  [form] ff_005: parsed=✓ strict=✗ alias=✗ | [
+  {
+    "发生地点": "四川省汶川县",
+    "发生时间": "2008年5月12日",
+    "起...
+  [form] ff_006: parsed=✓ strict=✗ alias=✗ | [
+  "位于",
+  "创建或成立时间: 1973",
+  "建筑师: 约恩·乌松"
+]
+  [form] ff_007: parsed=✓ strict=✓ alias=✓ | {
+  "位于": [
+    "北京市东城区",
+    "北京市西城区",
+    "北京市海淀区"
+  ],
+  ...
+  [form] ff_008: parsed=✓ strict=✓ alias=✗ | {
+  "名称": "高血压",
+  "症状": [
+    "头痛",
+    "头晕",
+    "心悸"
+  ],...
+  [form] ff_009: parsed=✓ strict=✗ alias=✗ | [
+    {
+        "属于": "太阳系"
+    },
+    {
+        "属于": "第六颗行...
+  [form] ff_010: parsed=✓ strict=✓ alias=✓ | ```json
+{
+  "作者": "曹雪芹",
+  "出版时间": "不详",
+  "成就": "中国古典小说的巅峰之...
+
+============================================================
+Evaluating: qwen_lora (backend=qwen)
+============================================================
+System.Management.Automation.RemoteException
+Loading weights:   0%|          | 0/338 [00:00<?, ?it/s]
+Loading weights:   0%|          | 1/338 [00:00<00:40,  8.38it/s]
+Loading weights:  43%|████▎     | 147/338 [00:00<00:00, 769.25it/s]
+Loading weights:  72%|███████▏  | 244/338 [00:00<00:00, 852.73it/s]
+Loading weights: 100%|██████████| 338/338 [00:00<00:00, 810.77it/s]
+  [extr] ext_001: parsed=✓ strict=✗ alias=✗ | {"鲁迅": {"出生地": "浙江省绍兴府会稽县", "别名": "周树人", "职业": "中国现代文学的奠基人"}...
+  [extr] ext_002: parsed=✓ strict=✗ alias=✗ | {"西湖": {"面积": "约6.39平方公里", "位置": ["浙江省", "杭州市西湖区"], "名称": "西...
+  [extr] ext_003: parsed=✓ strict=✗ alias=✗ | {"阿里巴巴集团": {"创始人": "马云", "成立时间": "1999年"}, "淘宝网": {"所属公司": "...
+  [extr] ext_004: parsed=✓ strict=✗ alias=✓ | {"青霉素": {"别名": "盘尼西林", "发明者": "亚历山大·弗莱明", "用途": "治疗由革兰氏阳性菌引起...
+  [extr] ext_005: parsed=✓ strict=✗ alias=✗ | {"埃菲尔铁塔": {"高度": "324米", "设计师": "古斯塔夫·埃菲尔", "建造时间": "1889年",...
+  [extr] ext_006: parsed=✓ strict=✗ alias=✗ | {"2008年北京夏季奥林匹克运动会": {"主办城市": "中国北京", "参赛国家和地区": "204个", "举办...
+  [extr] ext_007: parsed=✓ strict=✗ alias=✓ | {"糖尿病": {"主要症状": ["多饮", "多尿", "多食和体重下降"], "并发症": ["心血管疾病", "...
+  [extr] ext_008: parsed=✓ strict=✗ alias=✗ | {"上海虹桥站": {"所属": "中国铁路上海局集团有限公司", "位置": ["上海市闵行区", "中国铁路上海局集...
+  [extr] ext_009: parsed=✓ strict=✗ alias=✗ | {"宝剑": {"材料": "铁或钢", "长度": "55.7厘米"}, "越王勾践剑": {"产地": "湖北省江陵...
+  [extr] ext_010: parsed=✓ strict=✗ alias=✗ | {"三体": {"作者": "刘慈欣", "出版社": "重庆出版社", "获奖": ["雨果奖最佳长篇小说奖"], "...
+  [extr] ext_011: parsed=✓ strict=✗ alias=✗ | {"大熊猫": {"属": "Ailuropoda", "别称": "猫熊"}, "中国": {"特产": ["大熊猫"...
+  [extr] ext_012: parsed=✓ strict=✗ alias=✗ | {"木星": {"直径": "142984千米", "距离太阳": "7.78亿千米", "名称": "朱庇特"}}
+  [extr] ext_013: parsed=✓ strict=✗ alias=✗ | {"阿尔伯特·爱因斯坦": {"出生日期": "1879年3月14日", "国籍": "德国", "配偶": "米列娃·...
+  [extr] ext_014: parsed=✓ strict=✗ alias=✗ | {"第二次世界大战": {"参与方": ["同盟国", "轴心国"], "开始时间": "1939年9月1日", "结束...
+  [extr] ext_015: parsed=✓ strict=✗ alias=✗ | {"联合国": {"主要机构": ["安全理事会", "联合国大会", "国际法院"], "会员国": "193个"},...
+  [extr] ext_016: parsed=✓ strict=✗ alias=✗ | {"哈利·波特": {"作者": "J.K.罗琳", "出版公司": "英国布鲁姆斯伯里出版社"}, "哈利·波特与魔法...
+  [extr] ext_017: parsed=✓ strict=✗ alias=✗ | {"黑火药": {"别名": "火药", "用途": ["制造火炮和烟花", "军事和民用"], "原料": ["硝石"...
+  [extr] ext_018: parsed=✓ strict=✗ alias=✗ | {"长江": {"长度": "约6300千米", "起点": "青藏高原唐古拉山脉", "终点": "东海", "人口"...
+  [sche] sc_001: parsed=✓ strict=✗ alias=✗ | {"姚明": {"出生日期": "1980年9月12日", "职业": ["中国职业篮球运动员", "前中国职业篮球运动...
+  [sche] sc_002: parsed=✓ strict=✗ alias=✗ | {"腾讯公司": {"创始人": "马化腾", "成立时间": "1998年", "CEO": "马化腾"}, "马化腾...
+  [sche] sc_003: parsed=✓ strict=✗ alias=✗ | {"巴黎圣母院": {"用途": "天主教大教堂"}, "巴黎": {"用途": "宗教"}}
+  [sche] sc_004: parsed=✓ strict=✗ alias=✗ | {"肺炎": {"症状": ["发热", "咳嗽", "呼吸困难"], "所属科室": "呼吸系统"}, "呼吸系统":...
+  [sche] sc_005: parsed=✓ strict=✗ alias=✗ | {"1969年7月20日": {"事件": "阿波罗11号任务成功将宇航员送上月球", "人物": ["尼尔·阿姆斯特朗...
+  [sche] sc_006: parsed=✓ strict=✗ alias=✗ | {"X射线": {"发明者": "威廉·伦琴", "别称": "伦琴射线", "应用领域": ["医学影像诊断", "工...
+  [sche] sc_007: parsed=✓ strict=✗ alias=✗ | {"北京南站": {"车站等级": "特等站", "所属公司": "中国铁路北京局集团有限公司", "位置": "北京市...
+  [sche] sc_008: parsed=✓ strict=✗ alias=✗ | {"华南虎": {"保护级别": "国家一级保护动物"}}
+  [sche] sc_009: parsed=✓ strict=✗ alias=✗ | {"百年孤独": {"作者": "加西亚·马尔克斯", "奖项": ["诺贝尔文学奖", "魔幻现实主义文学"], "首...
+  [sche] sc_010: parsed=✓ strict=✗ alias=✗ | {"火星": {"直径": "约6779千米", "表面平均温度": "-63℃", "距离太阳的距离": "1.496...
+  [sche] sc_011: parsed=✓ strict=✗ alias=✗ | {"司南": {"材料": "天然磁石"}}
+  [sche] sc_012: parsed=✓ strict=✗ alias=✓ | {"死海": {"海拔": "-430米", "面积": "810平方公里", "位置": ["约旦", "巴勒斯坦",...
+  [form] ff_001: parsed=✓ strict=✓ alias=✓ | {"李白": {"出生日期": "701年", "职业": "唐代著名的浪漫主义诗人", "出生地": "碎叶城"}}
+  [form] ff_002: parsed=✓ strict=✗ alias=✗ | ["江西省北部", "安徽省", {"面积": "3150平方公里"}, "中国"]
+  [form] ff_003: parsed=✓ strict=✗ alias=✗ | {"华为技术有限公司": {"成立时间": "1987年", "位于": "广东省深圳市"}, "深圳市": {"位于"...
+  [form] ff_004: parsed=✓ strict=✓ alias=✓ | {"DNA双螺旋结构": {"发现者或发明者": "沃森和克里克"}}
+  [form] ff_005: parsed=✓ strict=✗ alias=✗ | {"2008年汶川地震": {"发生时间": "2008年5月12日", "发生地点": "四川省汶川县"}}
+  [form] ff_006: parsed=✓ strict=✗ alias=✗ | {"悉尼歌剧院": {"位于": "澳大利亚悉尼港口", "创建或成立时间": "1973年"}, "悉尼港口": {"...
+  [form] ff_007: parsed=✓ strict=✗ alias=✗ | {"北京地铁1号线": {"开通时间": "1969年10月1日", "位于": "北京市"}}
+  [form] ff_008: parsed=✓ strict=✗ alias=✗ | {"高血压": {"常见症状": ["头痛", "头晕", "心悸"], "并发症": ["冠心病", "脑卒中", "...
+  [form] ff_009: parsed=✗ strict=✗ alias=✗ | ["属于": "太阳系"], {"属于": "太阳系"}, {"直径": "116464千米"}
+  [form] ff_010: parsed=✓ strict=✓ alias=✓ | {"红楼梦": {"作者": "曹雪芹", "成就": "中国古典小说的巅峰之作", "出版时间": "未提供"}}
+
+================================================================================
+SUMMARY
+================================================================================
+Model             Parse%    Miss%   Hallu%   Strict%   Alias%
+----------------------------------------------------------
+qwen_base        100.0%   82.5%   65.0%    10.0%    7.5%
+qwen_lora         97.5%   80.0%   67.5%     7.5%   15.0%
+
+All results saved to results\instructie_eval_qwen

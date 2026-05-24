@@ -7,11 +7,13 @@ that the vLLM-deployed qwen_lora model maintains its structured output quality.
 Runs TWO rounds:
   Round 1: Normal chat completion (no format constraint)
   Round 2: Constrained completion with response_format=json_object (if supported)
+  Round 3: Schema-strict constrained completion (optional, --rounds 3)
 
 For each round, computes:
   - Parse%     (JSON parseable rate)
   - Strict%    (strict schema match rate — all 4 checks pass)
   - Alias-Strict% (alias-normalized strict rate)
+  - Projected-Strict% (after schema projection / field normalization postprocess)
   - Per-group breakdown (extraction / schema_constraint / format_following)
 
 Usage:
@@ -35,6 +37,12 @@ try:
 except ImportError:
     print("[ERROR] 'requests' not installed. Run: pip install requests")
     sys.exit(1)
+
+from microlm.structured.schema_repair import (
+    build_schema_strict_messages as build_shared_schema_strict_messages,
+    repair_to_schema as repair_to_schema_fields,
+    score_repaired_fields,
+)
 
 
 # ── Paths & Defaults ──────────────────────────────────────────────────────
@@ -112,6 +120,22 @@ def normalize_field_name(field: str) -> str:
     return field
 
 
+def as_value_list(value):
+    if isinstance(value, list):
+        return value
+    return [value]
+
+
+def merge_values(old, new):
+    if old == new:
+        return old
+    merged = []
+    for value in as_value_list(old) + as_value_list(new):
+        if value not in merged:
+            merged.append(value)
+    return merged
+
+
 def extract_all_fields(parsed) -> set[str]:
     fields = set()
     if isinstance(parsed, dict):
@@ -120,6 +144,55 @@ def extract_all_fields(parsed) -> set[str]:
             if isinstance(val, dict):
                 fields.update(val.keys())
     return fields
+
+
+def project_schema_fields(parsed, allowed_fields: list[str], use_aliases: bool = False) -> dict:
+    """Project arbitrary model JSON into a schema-field object.
+
+    This is intentionally conservative: only keys that match allowed schema
+    fields, directly or via alias normalization, survive. Entity-name keys are
+    treated as containers rather than fields when their values are nested dicts.
+    """
+    allowed = set(allowed_fields)
+    projected = {}
+
+    def maybe_add(field: str, value):
+        target = normalize_field_name(field) if use_aliases else field
+        if target not in allowed:
+            return False
+        if target in projected:
+            projected[target] = merge_values(projected[target], value)
+        else:
+            projected[target] = value
+        return True
+
+    def walk(obj):
+        if isinstance(obj, dict):
+            for key, value in obj.items():
+                added = maybe_add(key, value)
+                if not added and isinstance(value, (dict, list)):
+                    walk(value)
+        elif isinstance(obj, list):
+            for item in obj:
+                if isinstance(item, (dict, list)):
+                    walk(item)
+
+    walk(parsed)
+    return projected
+
+
+def enum_values_ok(fields: dict, enums: dict) -> bool:
+    if not enums:
+        return True
+    for fname, allowed_values in enums.items():
+        if fname not in fields:
+            continue
+        allowed = set(allowed_values)
+        values = fields[fname] if isinstance(fields[fname], list) else [fields[fname]]
+        for value in values:
+            if value is not None and value not in allowed:
+                return False
+    return True
 
 
 def score_output(raw_output: str, prompt_item: dict) -> dict:
@@ -145,6 +218,10 @@ def score_output(raw_output: str, prompt_item: dict) -> dict:
             "extra_fields": [],
             "schema_strict": False,
             "schema_strict_alias": False,
+            "projected_schema_strict": False,
+            "projected_schema_strict_alias": False,
+            "projected_fields": {},
+            "projected_fields_alias": {},
         })
         return result
 
@@ -175,6 +252,21 @@ def score_output(raw_output: str, prompt_item: dict) -> dict:
     extra_alias = [f for f in all_fields_raw if normalize_field_name(f) not in set(allowed)]
     schema_strict_alias = len(missing_alias) == 0 and len(extra_alias) == 0 and enum_ok
 
+    # Schema projection postprocess: keep only allowed schema fields, recurse
+    # through entity-nested JSON, normalize aliases, and reject structural
+    # values for scalar fields. This models the practical service layer we
+    # would use online after JSON parsing.
+    projected = repair_to_schema_fields(parsed, schema_def, use_aliases=False, fill_missing=False)
+    projected_alias = repair_to_schema_fields(parsed, schema_def, use_aliases=True, fill_missing=False)
+    projected_score = score_repaired_fields(projected, schema_def)
+    projected_alias_score = score_repaired_fields(projected_alias, schema_def)
+    missing_projected = projected_score["missing_fields"]
+    missing_projected_alias = projected_alias_score["missing_fields"]
+    projected_enum_ok = projected_score["enum_ok"]
+    projected_alias_enum_ok = projected_alias_score["enum_ok"]
+    projected_schema_strict = projected_score["schema_strict"]
+    projected_schema_strict_alias = projected_alias_score["schema_strict"]
+
     result.update({
         "missing_fields": missing,
         "extra_fields": extra,
@@ -183,6 +275,14 @@ def score_output(raw_output: str, prompt_item: dict) -> dict:
         "schema_strict_alias": schema_strict_alias,
         "missing_fields_alias": missing_alias,
         "extra_fields_alias": extra_alias,
+        "projected_fields": projected,
+        "projected_fields_alias": projected_alias,
+        "missing_fields_projected": missing_projected,
+        "missing_fields_projected_alias": missing_projected_alias,
+        "projected_enum_ok": projected_enum_ok if enums else None,
+        "projected_alias_enum_ok": projected_alias_enum_ok if enums else None,
+        "projected_schema_strict": projected_schema_strict,
+        "projected_schema_strict_alias": projected_schema_strict_alias,
     })
     return result
 
@@ -191,10 +291,11 @@ def score_output(raw_output: str, prompt_item: dict) -> dict:
 # Prompt Builder (same as run_instructie_eval.py)
 # ══════════════════════════════════════════════════════════════════════════
 
-def build_prompt_text(prompt_item: dict) -> str:
+def build_prompt_text(prompt_item: dict, strict_contract: bool = False) -> str:
     instruction = prompt_item.get("instruction", "")
     schema_list = prompt_item.get("schema", [])
     input_text = prompt_item.get("input", "")
+    schema_def = prompt_item.get("schema_def", {})
 
     parts = []
     if instruction:
@@ -205,6 +306,23 @@ def build_prompt_text(prompt_item: dict) -> str:
         parts.append(f"文本: {input_text}")
     else:
         parts.append(input_text)
+
+    if strict_contract and schema_list:
+        required = schema_def.get("required_fields", [])
+        contract = [
+            "输出契约:",
+            "1. 只输出一个 JSON object，不要输出 markdown、解释或多余文字。",
+            "2. 顶层 key 必须严格来自 Schema 字段名，不要把实体名称作为顶层 key。",
+            "3. 字段名必须原样复制 Schema 中的中文字段，不要翻译、改写或使用近义词。",
+            "4. 禁止输出 Schema 之外的字段。",
+            "5. 所有 required 字段都必须出现；无法确定的字段请填 null，列表字段无法确定时填 []。",
+            "正确格式示例: {\"出生地\": \"浙江绍兴\", \"出生日期\": \"1881年9月25日\", \"职业\": \"作家\"}",
+            "错误格式示例: {\"鲁迅\": {\"出生地\": \"浙江绍兴\"}}。不要输出这种实体嵌套格式。",
+            f"Allowed fields: {json.dumps(schema_list, ensure_ascii=False)}",
+        ]
+        if required:
+            contract.append(f"Required fields: {json.dumps(required, ensure_ascii=False)}")
+        parts.append("\n".join(contract))
 
     return "\n".join(parts)
 
@@ -248,6 +366,7 @@ def api_chat_completion(
 # ══════════════════════════════════════════════════════════════════════════
 
 SYSTEM_PROMPT = "你是一个严格遵循 schema 的信息抽取助手。请严格按照给定的 schema 从文本中抽取信息，并以 JSON 格式输出。不要在 JSON 前后添加任何解释性文字。"
+STRICT_SYSTEM_PROMPT = "你是一个 schema-strict JSON 生成器。输出必须是单个 JSON object；顶层 key 只能来自用户给定 Schema；禁止实体名做顶层 key；禁止 Schema 外字段；缺失信息用 null 或 [] 补齐。"
 
 
 def run_round(
@@ -257,11 +376,14 @@ def run_round(
     use_response_format: bool = False,
     limit: int = 0,
     model_name: str = "qwen",
+    system_prompt: str = SYSTEM_PROMPT,
+    strict_contract: bool = False,
 ) -> dict:
     """Run one evaluation round against the vLLM API."""
     print(f"\n{'='*60}")
     print(f"Round: {round_name}")
-    print(f"  Mode: {'constrained (response_format=json_object)' if use_response_format else 'normal chat completion'}")
+    mode_text = "schema-strict constrained" if strict_contract else "constrained (response_format=json_object)" if use_response_format else "normal chat completion"
+    print(f"  Mode: {mode_text}")
     print(f"  Prompts: {len(prompts) if limit == 0 else min(limit, len(prompts))}")
     print(f"{'='*60}")
 
@@ -273,9 +395,9 @@ def run_round(
     errors = 0
 
     for i, prompt_item in enumerate(prompts):
-        prompt_text = build_prompt_text(prompt_item)
+        prompt_text = build_prompt_text(prompt_item, strict_contract=strict_contract)
         messages = [
-            {"role": "system", "content": SYSTEM_PROMPT},
+            {"role": "system", "content": system_prompt},
             {"role": "user", "content": prompt_text},
         ]
 
@@ -308,9 +430,11 @@ def run_round(
         p_flag = "Y" if scored["parsed"] else "N"
         s_flag = "Y" if scored["schema_strict"] else "N"
         a_flag = "Y" if scored["schema_strict_alias"] else "N"
+        ps_flag = "Y" if scored.get("projected_schema_strict") else "N"
+        pa_flag = "Y" if scored.get("projected_schema_strict_alias") else "N"
         preview = output[:80].replace("\n", " ")
         print(f"  [{i+1}/{len(prompts)}] {prompt_item['group'][:4]:>4} {prompt_item['id']}: "
-              f"parse={p_flag} strict={s_flag} alias={a_flag} | {preview}...")
+              f"parse={p_flag} strict={s_flag} alias={a_flag} proj={ps_flag}/{pa_flag} | {preview}...")
 
     n = len(scored_results)
     if n == 0:
@@ -320,15 +444,19 @@ def run_round(
     parse_count = sum(1 for r in scored_results if r["parsed"])
     strict_count = sum(1 for r in scored_results if r["schema_strict"])
     alias_strict_count = sum(1 for r in scored_results if r.get("schema_strict_alias"))
+    projected_count = sum(1 for r in scored_results if r.get("projected_schema_strict"))
+    projected_alias_count = sum(1 for r in scored_results if r.get("projected_schema_strict_alias"))
 
     summary = {
         "round": round_name,
-        "mode": "constrained" if use_response_format else "normal",
+        "mode": "schema_strict" if strict_contract else "constrained" if use_response_format else "normal",
         "total": n,
         "errors": errors,
         "parse_rate": round(parse_count / n, 4),
         "strict_rate": round(strict_count / n, 4),
         "alias_strict_rate": round(alias_strict_count / n, 4),
+        "projected_strict_rate": round(projected_count / n, 4),
+        "projected_alias_strict_rate": round(projected_alias_count / n, 4),
         "total_time_s": round(total_time, 2),
         "avg_latency_s": round(total_time / n, 3) if n > 0 else 0,
         "results": scored_results,
@@ -347,6 +475,8 @@ def run_round(
             "parse_rate": round(sum(1 for r in group_results if r["parsed"]) / gn, 4),
             "strict_rate": round(sum(1 for r in group_results if r["schema_strict"]) / gn, 4),
             "alias_strict_rate": round(sum(1 for r in group_results if r.get("schema_strict_alias")) / gn, 4),
+            "projected_strict_rate": round(sum(1 for r in group_results if r.get("projected_schema_strict")) / gn, 4),
+            "projected_alias_strict_rate": round(sum(1 for r in group_results if r.get("projected_schema_strict_alias")) / gn, 4),
         }
     summary["by_group"] = by_group
 
@@ -355,12 +485,15 @@ def run_round(
     print(f"  Parse%:       {summary['parse_rate']:.1%} ({parse_count}/{n})")
     print(f"  Strict%:      {summary['strict_rate']:.1%} ({strict_count}/{n})")
     print(f"  Alias-Strict%:{summary['alias_strict_rate']:.1%} ({alias_strict_count}/{n})")
+    print(f"  Proj-Strict%: {summary['projected_strict_rate']:.1%} ({projected_count}/{n})")
+    print(f"  Proj-Alias%:  {summary['projected_alias_strict_rate']:.1%} ({projected_alias_count}/{n})")
     print(f"  Errors:       {errors}")
     print(f"  Total time:   {summary['total_time_s']}s")
     if by_group:
         print(f"  By group:")
         for g, gs in by_group.items():
-            print(f"    {g:<22} P={gs['parse_rate']:.1%} S={gs['strict_rate']:.1%} A={gs['alias_strict_rate']:.1%}")
+            print(f"    {g:<22} P={gs['parse_rate']:.1%} S={gs['strict_rate']:.1%} A={gs['alias_strict_rate']:.1%} "
+                  f"Proj={gs['projected_strict_rate']:.1%}/{gs['projected_alias_strict_rate']:.1%}")
 
     return summary
 
@@ -373,7 +506,7 @@ def main():
     parser = argparse.ArgumentParser(description="Check structured output stability on vLLM")
     parser.add_argument("--base-url", type=str, default=DEFAULT_BASE_URL)
     parser.add_argument("--eval-file", type=str, default=None)
-    parser.add_argument("--rounds", type=int, default=2, help="Number of rounds (1=normal only, 2=+constrained)")
+    parser.add_argument("--rounds", type=int, default=2, help="Number of rounds (1=normal, 2=+constrained, 3=+schema-strict constrained)")
     parser.add_argument("--limit", type=int, default=0, help="Limit prompts per round (0=all)")
     parser.add_argument("--output-dir", type=str, default=None)
     args = parser.parse_args()
@@ -426,15 +559,30 @@ def main():
                        use_response_format=True, limit=args.limit, model_name=model_name)
         all_rounds.append(r2)
 
+    # ── Round 3: Schema-strict constrained completion ──
+    if args.rounds >= 3:
+        r3 = run_round(
+            args.base_url,
+            prompts,
+            "Round 3: Schema-Strict Constrained",
+            use_response_format=True,
+            limit=args.limit,
+            model_name=model_name,
+            system_prompt=STRICT_SYSTEM_PROMPT,
+            strict_contract=True,
+        )
+        all_rounds.append(r3)
+
     # ── Comparison table ──
     print(f"\n{'='*70}")
     print("STABILITY CHECK COMPARISON")
     print(f"{'='*70}")
-    print(f"{'Round':<45} {'Parse%':>8} {'Strict%':>9} {'Alias-S%':>10}")
-    print("-" * 75)
+    print(f"{'Round':<45} {'Parse%':>8} {'Strict%':>9} {'Alias-S%':>10} {'Proj%':>8} {'Proj-A%':>9}")
+    print("-" * 94)
     for rd in all_rounds:
-        mode_tag = " [constrained]" if rd["mode"] == "constrained" else ""
-        print(f"{rd['round']:<45}{rd['parse_rate']:>7.1%}{rd['strict_rate']:>8.1%}{rd['alias_strict_rate']:>9.1%}{mode_tag}")
+        mode_tag = " [strict]" if rd["mode"] == "schema_strict" else " [constrained]" if rd["mode"] == "constrained" else ""
+        print(f"{rd['round']:<45}{rd['parse_rate']:>7.1%}{rd['strict_rate']:>8.1%}{rd['alias_strict_rate']:>9.1%}"
+              f"{rd['projected_strict_rate']:>8.1%}{rd['projected_alias_strict_rate']:>9.1%}{mode_tag}")
 
     # Compare with 6C offline results (reference)
     print(f"\n--- Reference: 6C Offline Results (qwen_lora) ---")
@@ -460,6 +608,8 @@ def main():
                 "parse_rate": rd["parse_rate"],
                 "strict_rate": rd["strict_rate"],
                 "alias_strict_rate": rd["alias_strict_rate"],
+                "projected_strict_rate": rd["projected_strict_rate"],
+                "projected_alias_strict_rate": rd["projected_alias_strict_rate"],
                 "by_group": rd.get("by_group", {}),
                 "avg_latency_s": rd["avg_latency_s"],
             }
@@ -483,9 +633,13 @@ def main():
     with open(csv_out, "w", encoding="utf-8", newline="") as f:
         writer = csv.writer(f)
         writer.writerow(["round", "mode", "total", "parse_rate", "strict_rate", "alias_strict_rate",
+                         "projected_strict_rate", "projected_alias_strict_rate",
                          "extraction_P", "extraction_S", "extraction_A",
+                         "extraction_projected", "extraction_projected_alias",
                          "schema_P", "schema_S", "schema_A",
+                         "schema_projected", "schema_projected_alias",
                          "format_P", "format_S", "format_A",
+                         "format_projected", "format_projected_alias",
                          "avg_latency_s"])
         for rd in all_rounds:
             bg = rd.get("by_group", {})
@@ -495,9 +649,13 @@ def main():
             writer.writerow([
                 rd["round"], rd["mode"], rd["total"],
                 rd["parse_rate"], rd["strict_rate"], rd["alias_strict_rate"],
+                rd["projected_strict_rate"], rd["projected_alias_strict_rate"],
                 eg.get("parse_rate", ""), eg.get("strict_rate", ""), eg.get("alias_strict_rate", ""),
+                eg.get("projected_strict_rate", ""), eg.get("projected_alias_strict_rate", ""),
                 sg.get("parse_rate", ""), sg.get("strict_rate", ""), sg.get("alias_strict_rate", ""),
+                sg.get("projected_strict_rate", ""), sg.get("projected_alias_strict_rate", ""),
                 fg.get("parse_rate", ""), fg.get("strict_rate", ""), fg.get("alias_strict_rate", ""),
+                fg.get("projected_strict_rate", ""), fg.get("projected_alias_strict_rate", ""),
                 rd["avg_latency_s"],
             ])
     print(f"CSV saved to {csv_out}")

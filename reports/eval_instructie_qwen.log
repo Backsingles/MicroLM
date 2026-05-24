@@ -1,0 +1,20 @@
+﻿
+Eval params: temp=0.0, top_p=1.0, max_tokens=256, seed=42
+Total prompts: 40
+
+============================================================
+Evaluating: qwen_base (backend=qwen)
+============================================================
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+System.Management.Automation.RemoteException
+Loading weights:   0%|          | 0/338 [00:00<?, ?it/s]
+Loading weights:  26%|������       | 89/338 [00:00<00:00, 880.79it/s]
+Loading weights:  57%|������������    | 193/338 [00:00<00:00, 947.81it/s]
+Loading weights:  86%|������������������ | 291/338 [00:00<00:00, 944.50it/s]
+Loading weights: 100%|��������������������| 338/338 [00:00<00:00, 957.46it/s]
+Traceback (most recent call last):
+  File "E:\MicroLM\scripts\run_instructie_eval.py", line 816, in <module>
+    run_evaluation(
+  File "E:\MicroLM\scripts\run_instructie_eval.py", line 662, in run_evaluation
+    print(f"  [{prompt_item['group'][:4]}] {prompt_item['id']}: "
+UnicodeEncodeError: 'gbk' codec can't encode character '\u2713' in position 25: illegal multibyte sequence

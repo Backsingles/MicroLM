@@ -1,0 +1,39 @@
+{
+  "name": "qwen_lora_refine_hardcases",
+  "description": "Short LoRA refinement on hardcase replay data, using the merged D2 model as base.",
+  "model_name": "./outputs/qwen_lora_merged_final",
+  "system_prompt": "你是一个严格遵循 schema 的信息抽取助手。请严格按照给定的 schema 从文本中抽取信息，并以 JSON 格式输出。不要在 JSON 前后添加任何解释性文字。",
+  "lora": {
+    "r": 8,
+    "alpha": 16,
+    "targets": ["q_proj", "k_proj", "v_proj", "o_proj"],
+    "dropout": 0.05
+  },
+  "optimizer": {
+    "lr": 0.00001,
+    "weight_decay": 0.01
+  },
+  "training": {
+    "batch_size": 4,
+    "gradient_accumulation_steps": 4,
+    "max_steps": 300,
+    "eval_interval": 50,
+    "save_interval": 100,
+    "warmup_steps": 20,
+    "max_grad_norm": 1.0,
+    "max_length": 512,
+    "device": "cuda",
+    "seed": 43,
+    "out_dir": "outputs/qwen_lora_refine",
+    "fp16": true
+  },
+  "data": {
+    "train_data_path": "data/qwen_refine/train.jsonl",
+    "valid_data_path": "data/qwen_refine/valid.jsonl"
+  },
+  "logging": {
+    "wandb_project": "micro-lm-qwen",
+    "run_name": "qwen_lora_refine_hardcases",
+    "mode": "disabled"
+  }
+}

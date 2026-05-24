@@ -1,0 +1,40 @@
+{
+  "model_path": "outputs\\qwen_lora_merged_final",
+  "data_path": "data\\qwen_refine\\hardcases_once.jsonl",
+  "sample_count": 17,
+  "seed": 42,
+  "max_new_tokens": 256,
+  "temperature": 0.0,
+  "top_p": 1.0,
+  "parseable_rate": 1.0,
+  "direct_json_rate": 1.0,
+  "markdown_fence_rate": 0.0,
+  "exact_match_rate": 0.0,
+  "avg_field_precision": 0.20756302521008402,
+  "avg_field_recall": 0.125,
+  "avg_field_f1": 0.14818775995246586,
+  "avg_pair_precision": 0.10784313725490195,
+  "avg_pair_recall": 0.043137254901960784,
+  "avg_pair_f1": 0.05751633986928104,
+  "avg_latency_sec": 0.8622989093556124,
+  "by_task": {
+    "format_following": {
+      "total": 2,
+      "parseable_rate": 1.0,
+      "direct_json_rate": 1.0,
+      "exact_match_rate": 0.0
+    },
+    "ie_extraction": {
+      "total": 9,
+      "parseable_rate": 1.0,
+      "direct_json_rate": 1.0,
+      "exact_match_rate": 0.0
+    },
+    "text_to_json": {
+      "total": 6,
+      "parseable_rate": 1.0,
+      "direct_json_rate": 1.0,
+      "exact_match_rate": 0.0
+    }
+  }
+}

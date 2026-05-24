@@ -1,0 +1,46 @@
+{
+  "model_path": "outputs\\qwen_lora_merged_final",
+  "data_path": "data\\sft_candidate\\valid.jsonl",
+  "sample_count": 5,
+  "seed": 42,
+  "max_new_tokens": 256,
+  "temperature": 0.0,
+  "top_p": 1.0,
+  "parseable_rate": 1.0,
+  "direct_json_rate": 1.0,
+  "markdown_fence_rate": 0.0,
+  "exact_match_rate": 0.4,
+  "avg_field_precision": 0.8799999999999999,
+  "avg_field_recall": 0.7746031746031745,
+  "avg_field_f1": 0.8204545454545453,
+  "avg_pair_precision": 0.8300000000000001,
+  "avg_pair_recall": 0.7533333333333334,
+  "avg_pair_f1": 0.7878787878787878,
+  "avg_latency_sec": 1.2180943489074707,
+  "by_task": {
+    "format_following": {
+      "total": 1,
+      "parseable_rate": 1.0,
+      "direct_json_rate": 1.0,
+      "exact_match_rate": 1.0
+    },
+    "ie_extraction": {
+      "total": 2,
+      "parseable_rate": 1.0,
+      "direct_json_rate": 1.0,
+      "exact_match_rate": 0.0
+    },
+    "schema_repair": {
+      "total": 1,
+      "parseable_rate": 1.0,
+      "direct_json_rate": 1.0,
+      "exact_match_rate": 1.0
+    },
+    "text_to_json": {
+      "total": 1,
+      "parseable_rate": 1.0,
+      "direct_json_rate": 1.0,
+      "exact_match_rate": 0.0
+    }
+  }
+}

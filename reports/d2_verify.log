@@ -1,0 +1,45 @@
+﻿Exit code:
+0
+
+Merged output files:
+
+Name                       Length LastWriteTime     
+----                       ------ -------------     
+chat_template.jinja          2561 2026/5/20 23:02:02
+config.json                  1433 2026/5/20 23:02:00
+export_metadata.json          505 2026/5/20 23:02:02
+generation_config.json        255 2026/5/20 23:02:00
+model.safetensors      3087467144 2026/5/20 23:02:02
+tokenizer.json           11421892 2026/5/20 23:02:02
+tokenizer_config.json         723 2026/5/20 23:02:02
+
+
+
+Export metadata:
+{
+  "status": "exported",
+  "timestamp": "2026-05-20 23:02:02",
+  "base_model": "E:\\MicroLM\\Qwen2.5-1.5B-Instruct",
+  "adaptor_path": "E:\\MicroLM\\outputs\\qwen_lora\\adaptor_final",
+  "output_dir": "E:\\MicroLM\\outputs\\qwen_lora_merged_final",
+  "total_params": 1543714304,
+  "elapsed_sec": 6.9,
+  "adaptor_config": {
+    "r": 8,
+    "lora_alpha": 16,
+    "target_modules": [
+      "k_proj",
+      "v_proj",
+      "q_proj",
+      "o_proj"
+    ],
+    "peft_version": "0.19.1"
+  }
+}
+
+Local load smoke test:
+model_type= qwen2
+vocab_size= 151936
+tokenizer_vocab= 151665
+pad_token_id= 151643
+

@@ -1,0 +1,716 @@
+﻿
+
+## Refine comparison eval original_hardcases - 2026-05-20 23:41:50 +08:00
+
+```powershell
+.\\.venv\\Scripts\\python.exe -u scripts\\evaluate_qwen_valid_jsonl.py --model-path outputs\qwen_lora_merged_final --data-path data\qwen_refine\hardcases_once.jsonl --limit 0 --out-dir results\qwen_refine_compare\original_hardcases
+```
+
+```text
+Loading model: outputs\qwen_lora_merged_final
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+System.Management.Automation.RemoteException
+Loading weights:   0%|          | 0/338 [00:00<?, ?it/s]
+Loading weights:  15%|█▌        | 51/338 [00:00<00:00, 493.62it/s]
+Loading weights:  43%|████▎     | 147/338 [00:00<00:00, 761.15it/s]
+Loading weights:  72%|███████▏  | 243/338 [00:00<00:00, 847.85it/s]
+Loading weights: 100%|██████████| 338/338 [00:00<00:00, 837.51it/s]
+Evaluating 17 samples from data\qwen_refine\hardcases_once.jsonl
+Generation: max_new_tokens=256, temperature=0.0, top_p=1.0
+[0001/17] instructie_ie_extraction_000847 parsed=True direct=True exact=False field_f1=0.000 pair_f1=0.000 latency=1.37s
+[0002/17] instructie_text_to_json_021497 parsed=True direct=True exact=False field_f1=0.400 pair_f1=0.222 latency=0.99s
+[0003/17] instructie_text_to_json_017694 parsed=True direct=True exact=False field_f1=0.000 pair_f1=0.000 latency=0.58s
+[0004/17] instructie_ie_extraction_001491 parsed=True direct=True exact=False field_f1=0.400 pair_f1=0.333 latency=0.51s
+[0005/17] instructie_ie_extraction_014877 parsed=True direct=True exact=False field_f1=0.222 pair_f1=0.000 latency=0.97s
+[0006/17] instructie_ie_extraction_013248 parsed=True direct=True exact=False field_f1=0.000 pair_f1=0.000 latency=0.31s
+[0007/17] instructie_format_following_022524 parsed=True direct=True exact=False field_f1=0.000 pair_f1=0.000 latency=1.34s
+[0008/17] instructie_ie_extraction_012087 parsed=True direct=True exact=False field_f1=0.000 pair_f1=0.000 latency=0.78s
+[0009/17] instructie_ie_extraction_009163 parsed=True direct=True exact=False field_f1=0.400 pair_f1=0.000 latency=0.72s
+[0010/17] instructie_text_to_json_018166 parsed=True direct=True exact=False field_f1=0.000 pair_f1=0.000 latency=0.73s
+[0011/17] instructie_format_following_023540 parsed=True direct=True exact=False field_f1=0.333 pair_f1=0.000 latency=0.27s
+[0012/17] instructie_text_to_json_015384 parsed=True direct=True exact=False field_f1=0.000 pair_f1=0.000 latency=1.19s
+[0013/17] instructie_text_to_json_017636 parsed=True direct=True exact=False field_f1=0.000 pair_f1=0.000 latency=0.73s
+[0014/17] instructie_text_to_json_022338 parsed=True direct=True exact=False field_f1=0.400 pair_f1=0.200 latency=1.69s
+[0015/17] instructie_ie_extraction_001370 parsed=True direct=True exact=False field_f1=0.000 pair_f1=0.000 latency=1.09s
+[0016/17] instructie_ie_extraction_010134 parsed=True direct=True exact=False field_f1=0.364 pair_f1=0.222 latency=1.00s
+[0017/17] instructie_ie_extraction_012551 parsed=True direct=True exact=False field_f1=0.000 pair_f1=0.000 latency=0.39s
+
+SUMMARY
+{
+  "model_path": "outputs\\qwen_lora_merged_final",
+  "data_path": "data\\qwen_refine\\hardcases_once.jsonl",
+  "sample_count": 17,
+  "seed": 42,
+  "max_new_tokens": 256,
+  "temperature": 0.0,
+  "top_p": 1.0,
+  "parseable_rate": 1.0,
+  "direct_json_rate": 1.0,
+  "markdown_fence_rate": 0.0,
+  "exact_match_rate": 0.0,
+  "avg_field_precision": 0.20756302521008402,
+  "avg_field_recall": 0.125,
+  "avg_field_f1": 0.14818775995246586,
+  "avg_pair_precision": 0.10784313725490195,
+  "avg_pair_recall": 0.043137254901960784,
+  "avg_pair_f1": 0.05751633986928104,
+  "avg_latency_sec": 0.8622989093556124,
+  "by_task": {
+    "format_following": {
+      "total": 2,
+      "parseable_rate": 1.0,
+      "direct_json_rate": 1.0,
+      "exact_match_rate": 0.0
+    },
+    "ie_extraction": {
+      "total": 9,
+      "parseable_rate": 1.0,
+      "direct_json_rate": 1.0,
+      "exact_match_rate": 0.0
+    },
+    "text_to_json": {
+      "total": 6,
+      "parseable_rate": 1.0,
+      "direct_json_rate": 1.0,
+      "exact_match_rate": 0.0
+    }
+  }
+}
+
+Saved summary to results\qwen_refine_compare\original_hardcases\summary.json
+Saved detailed results to results\qwen_refine_compare\original_hardcases\results.jsonl
+Saved failure samples to results\qwen_refine_compare\original_hardcases\failure_samples.jsonl
+```
+
+Exit code: 0
+
+## Refine comparison eval refined_hardcases - 2026-05-20 23:42:09 +08:00
+
+```powershell
+.\\.venv\\Scripts\\python.exe -u scripts\\evaluate_qwen_valid_jsonl.py --model-path outputs\qwen_lora_merged_refined_best --data-path data\qwen_refine\hardcases_once.jsonl --limit 0 --out-dir results\qwen_refine_compare\refined_hardcases
+```
+
+```text
+Loading model: outputs\qwen_lora_merged_refined_best
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+System.Management.Automation.RemoteException
+Loading weights:   0%|          | 0/338 [00:00<?, ?it/s]
+Loading weights:  15%|█▌        | 51/338 [00:00<00:00, 491.85it/s]
+Loading weights:  44%|████▍     | 148/338 [00:00<00:00, 766.55it/s]
+Loading weights:  72%|███████▏  | 243/338 [00:00<00:00, 833.94it/s]
+Loading weights: 100%|██████████| 338/338 [00:00<00:00, 847.96it/s]
+Evaluating 17 samples from data\qwen_refine\hardcases_once.jsonl
+Generation: max_new_tokens=256, temperature=0.0, top_p=1.0
+[0001/17] instructie_ie_extraction_000847 parsed=True direct=True exact=False field_f1=0.000 pair_f1=0.000 latency=1.29s
+[0002/17] instructie_text_to_json_021497 parsed=True direct=True exact=False field_f1=0.400 pair_f1=0.222 latency=0.83s
+[0003/17] instructie_text_to_json_017694 parsed=True direct=True exact=False field_f1=0.000 pair_f1=0.000 latency=0.55s
+[0004/17] instructie_ie_extraction_001491 parsed=True direct=True exact=False field_f1=0.400 pair_f1=0.333 latency=0.46s
+[0005/17] instructie_ie_extraction_014877 parsed=True direct=True exact=False field_f1=0.200 pair_f1=0.000 latency=1.07s
+[0006/17] instructie_ie_extraction_013248 parsed=True direct=True exact=False field_f1=0.000 pair_f1=0.000 latency=0.30s
+[0007/17] instructie_format_following_022524 parsed=True direct=True exact=False field_f1=0.000 pair_f1=0.000 latency=1.60s
+[0008/17] instructie_ie_extraction_012087 parsed=True direct=True exact=False field_f1=0.000 pair_f1=0.000 latency=0.81s
+[0009/17] instructie_ie_extraction_009163 parsed=True direct=True exact=False field_f1=0.400 pair_f1=0.000 latency=0.69s
+[0010/17] instructie_text_to_json_018166 parsed=True direct=True exact=False field_f1=0.000 pair_f1=0.000 latency=0.90s
+[0011/17] instructie_format_following_023540 parsed=True direct=True exact=False field_f1=0.333 pair_f1=0.000 latency=0.27s
+[0012/17] instructie_text_to_json_015384 parsed=True direct=True exact=False field_f1=0.000 pair_f1=0.000 latency=1.11s
+[0013/17] instructie_text_to_json_017636 parsed=True direct=True exact=False field_f1=0.000 pair_f1=0.000 latency=0.73s
+[0014/17] instructie_text_to_json_022338 parsed=True direct=True exact=False field_f1=0.400 pair_f1=0.200 latency=1.38s
+[0015/17] instructie_ie_extraction_001370 parsed=True direct=True exact=False field_f1=0.000 pair_f1=0.000 latency=1.09s
+[0016/17] instructie_ie_extraction_010134 parsed=True direct=True exact=False field_f1=0.364 pair_f1=0.222 latency=0.99s
+[0017/17] instructie_ie_extraction_012551 parsed=True direct=True exact=False field_f1=0.000 pair_f1=0.000 latency=0.40s
+
+SUMMARY
+{
+  "model_path": "outputs\\qwen_lora_merged_refined_best",
+  "data_path": "data\\qwen_refine\\hardcases_once.jsonl",
+  "sample_count": 17,
+  "seed": 42,
+  "max_new_tokens": 256,
+  "temperature": 0.0,
+  "top_p": 1.0,
+  "parseable_rate": 1.0,
+  "direct_json_rate": 1.0,
+  "markdown_fence_rate": 0.0,
+  "exact_match_rate": 0.0,
+  "avg_field_precision": 0.20560224089635853,
+  "avg_field_recall": 0.125,
+  "avg_field_f1": 0.14688057040998218,
+  "avg_pair_precision": 0.10784313725490195,
+  "avg_pair_recall": 0.043137254901960784,
+  "avg_pair_f1": 0.05751633986928104,
+  "avg_latency_sec": 0.8510127067565918,
+  "by_task": {
+    "format_following": {
+      "total": 2,
+      "parseable_rate": 1.0,
+      "direct_json_rate": 1.0,
+      "exact_match_rate": 0.0
+    },
+    "ie_extraction": {
+      "total": 9,
+      "parseable_rate": 1.0,
+      "direct_json_rate": 1.0,
+      "exact_match_rate": 0.0
+    },
+    "text_to_json": {
+      "total": 6,
+      "parseable_rate": 1.0,
+      "direct_json_rate": 1.0,
+      "exact_match_rate": 0.0
+    }
+  }
+}
+
+Saved summary to results\qwen_refine_compare\refined_hardcases\summary.json
+Saved detailed results to results\qwen_refine_compare\refined_hardcases\results.jsonl
+Saved failure samples to results\qwen_refine_compare\refined_hardcases\failure_samples.jsonl
+```
+
+Exit code: 0
+
+## Refine comparison eval original_holdout - 2026-05-20 23:42:28 +08:00
+
+```powershell
+.\\.venv\\Scripts\\python.exe -u scripts\\evaluate_qwen_valid_jsonl.py --model-path outputs\qwen_lora_merged_final --data-path data\qwen_refine\eval_holdout.jsonl --limit 0 --out-dir results\qwen_refine_compare\original_holdout
+```
+
+```text
+Loading model: outputs\qwen_lora_merged_final
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+System.Management.Automation.RemoteException
+Loading weights:   0%|          | 0/338 [00:00<?, ?it/s]
+Loading weights:  15%|█▌        | 52/338 [00:00<00:00, 503.94it/s]
+Loading weights:  42%|████▏     | 143/338 [00:00<00:00, 724.30it/s]
+Loading weights:  68%|██████▊   | 231/338 [00:00<00:00, 786.17it/s]
+Loading weights:  97%|█████████▋| 327/338 [00:00<00:00, 843.84it/s]
+Loading weights: 100%|██████████| 338/338 [00:00<00:00, 810.40it/s]
+Evaluating 200 samples from data\qwen_refine\eval_holdout.jsonl
+Generation: max_new_tokens=256, temperature=0.0, top_p=1.0
+[0001/200] instructie_text_to_json_017005 parsed=True direct=True exact=False field_f1=0.889 pair_f1=0.857 latency=1.10s
+[0002/200] instructie_ie_extraction_001706 parsed=True direct=True exact=False field_f1=0.800 pair_f1=0.750 latency=0.95s
+[0003/200] instructie_ie_extraction_010101 parsed=True direct=True exact=True field_f1=1.000 pair_f1=1.000 latency=1.78s
+[0004/200] instructie_schema_repair_027177 parsed=True direct=True exact=True field_f1=1.000 pair_f1=1.000 latency=1.05s
+[0005/200] instructie_ie_extraction_013824 parsed=True direct=True exact=False field_f1=0.824 pair_f1=0.727 latency=1.45s
+[0006/200] instructie_format_following_024997 parsed=True direct=True exact=False field_f1=0.667 pair_f1=0.667 latency=1.05s
+[0007/200] instructie_ie_extraction_006360 parsed=True direct=True exact=True field_f1=1.000 pair_f1=1.000 latency=1.00s
+[0008/200] instructie_ie_extraction_008685 parsed=True direct=True exact=False field_f1=1.000 pair_f1=0.667 latency=0.92s
+[0009/200] instructie_text_to_json_016928 parsed=True direct=True exact=False field_f1=0.923 pair_f1=0.889 latency=0.85s
+[0010/200] instructie_text_to_json_015810 parsed=True direct=True exact=False field_f1=0.545 pair_f1=0.400 latency=0.99s
+[0011/200] instructie_ie_extraction_009117 parsed=True direct=True exact=False field_f1=0.500 pair_f1=0.286 latency=1.13s
+[0012/200] instructie_ie_extraction_003965 parsed=True direct=True exact=False field_f1=0.750 pair_f1=0.571 latency=0.60s
+[0013/200] instructie_ie_extraction_003361 parsed=True direct=True exact=False field_f1=0.000 pair_f1=0.000 latency=0.30s
+[0014/200] instructie_ie_extraction_002683 parsed=True direct=True exact=False field_f1=0.000 pair_f1=0.000 latency=0.31s
+[0015/200] instructie_ie_extraction_013510 parsed=True direct=True exact=False field_f1=0.000 pair_f1=0.000 latency=0.55s
+[0016/200] instructie_schema_repair_028312 parsed=True direct=True exact=True field_f1=1.000 pair_f1=1.000 latency=1.21s
+[0017/200] instructie_ie_extraction_012423 parsed=True direct=True exact=False field_f1=0.727 pair_f1=0.545 latency=1.35s
+[0018/200] instructie_ie_extraction_007020 parsed=True direct=True exact=True field_f1=1.000 pair_f1=1.000 latency=1.00s
+[0019/200] instructie_text_to_json_017338 parsed=True direct=True exact=False field_f1=0.800 pair_f1=0.750 latency=0.84s
+[0020/200] instructie_format_following_025727 parsed=True direct=True exact=False field_f1=0.769 pair_f1=0.400 latency=1.38s
+[0021/200] instructie_ie_extraction_010336 parsed=True direct=True exact=True field_f1=1.000 pair_f1=1.000 latency=1.57s
+[0022/200] instructie_text_to_json_021369 parsed=True direct=True exact=True field_f1=1.000 pair_f1=1.000 latency=0.49s
+[0023/200] instructie_ie_extraction_005182 parsed=True direct=True exact=False field_f1=0.333 pair_f1=0.400 latency=0.72s
+[0024/200] instructie_text_to_json_021875 parsed=True direct=True exact=False field_f1=0.625 pair_f1=0.000 latency=1.10s
+[0025/200] instructie_text_to_json_020952 parsed=True direct=True exact=False field_f1=0.750 pair_f1=0.800 latency=0.80s
+[0026/200] instructie_schema_repair_029627 parsed=True direct=True exact=False field_f1=0.571 pair_f1=0.200 latency=0.95s
+[0027/200] instructie_text_to_json_021540 parsed=True direct=True exact=False field_f1=0.800 pair_f1=0.500 latency=0.34s
+[0028/200] instructie_text_to_json_019543 parsed=True direct=True exact=False field_f1=0.909 pair_f1=0.857 latency=0.79s
+[0029/200] instructie_text_to_json_018448 parsed=True direct=True exact=False field_f1=0.857 pair_f1=0.909 latency=0.98s
+[0030/200] instructie_ie_extraction_003224 parsed=True direct=True exact=False field_f1=0.800 pair_f1=0.667 latency=0.29s
+[0031/200] instructie_ie_extraction_013087 parsed=True direct=True exact=False field_f1=0.800 pair_f1=0.000 latency=0.93s
+[0032/200] instructie_ie_extraction_013338 parsed=True direct=True exact=False field_f1=0.800 pair_f1=0.667 latency=0.62s
+[0033/200] instructie_ie_extraction_007554 parsed=True direct=True exact=False field_f1=1.000 pair_f1=0.857 latency=1.01s
+[0034/200] instructie_format_following_023031 parsed=True direct=True exact=False field_f1=0.833 pair_f1=0.545 latency=1.23s
+[0035/200] instructie_schema_repair_028587 parsed=True direct=True exact=True field_f1=1.000 pair_f1=1.000 latency=1.48s
+[0036/200] instructie_text_to_json_021627 parsed=True direct=True exact=False field_f1=1.000 pair_f1=0.000 latency=0.51s
+[0037/200] instructie_format_following_023524 parsed=True direct=True exact=False field_f1=0.800 pair_f1=0.667 latency=0.38s
+[0038/200] instructie_ie_extraction_011118 parsed=True direct=True exact=True field_f1=1.000 pair_f1=1.000 latency=1.94s
+[0039/200] instructie_ie_extraction_004593 parsed=True direct=True exact=False field_f1=0.889 pair_f1=0.857 latency=0.85s
+[0040/200] instructie_text_to_json_020390 parsed=True direct=True exact=False field_f1=0.889 pair_f1=0.909 latency=1.51s
+[0041/200] instructie_text_to_json_022266 parsed=True direct=True exact=False field_f1=0.625 pair_f1=0.444 latency=0.95s
+[0042/200] instructie_text_to_json_020349 parsed=True direct=True exact=False field_f1=0.941 pair_f1=0.909 latency=1.47s
+[0043/200] instructie_format_following_023983 parsed=True direct=True exact=True field_f1=1.000 pair_f1=1.000 latency=0.93s
+[0044/200] instructie_ie_extraction_006089 parsed=True direct=True exact=True field_f1=1.000 pair_f1=1.000 latency=0.28s
+[0045/200] instructie_ie_extraction_008544 parsed=True direct=True exact=False field_f1=0.857 pair_f1=0.909 latency=1.17s
+[0046/200] instructie_text_to_json_021936 parsed=True direct=True exact=False field_f1=0.824 pair_f1=0.800 latency=1.08s
+[0047/200] instructie_format_following_025314 parsed=True direct=True exact=False field_f1=0.933 pair_f1=0.889 latency=1.08s
+[0048/200] instructie_ie_extraction_003208 parsed=True direct=True exact=True field_f1=1.000 pair_f1=1.000 latency=0.33s
+[0049/200] instructie_ie_extraction_006498 parsed=True direct=True exact=True field_f1=1.000 pair_f1=1.000 latency=0.92s
+[0050/200] instructie_ie_extraction_001916 parsed=True direct=True exact=False field_f1=0.600 pair_f1=0.500 latency=0.97s
+[0051/200] instructie_text_to_json_017502 parsed=True direct=True exact=False field_f1=0.571 pair_f1=0.000 latency=0.32s
+[0052/200] instructie_schema_repair_029816 parsed=True direct=True exact=True field_f1=1.000 pair_f1=1.000 latency=1.11s
+[0053/200] instructie_ie_extraction_014794 parsed=True direct=True exact=False field_f1=0.727 pair_f1=0.571 latency=0.94s
+[0054/200] instructie_ie_extraction_008524 parsed=True direct=True exact=False field_f1=1.000 pair_f1=1.000 latency=1.20s
+[0055/200] instructie_text_to_json_019876 parsed=True direct=True exact=False field_f1=0.737 pair_f1=0.500 latency=1.41s
+[0056/200] instructie_ie_extraction_007505 parsed=True direct=True exact=False field_f1=0.889 pair_f1=0.857 latency=1.14s
+[0057/200] instructie_text_to_json_020537 parsed=True direct=True exact=False field_f1=0.875 pair_f1=0.600 latency=1.55s
+[0058/200] instructie_format_following_026087 parsed=True direct=True exact=False field_f1=0.727 pair_f1=0.667 latency=0.96s
+[0059/200] instructie_format_following_025815 parsed=True direct=True exact=False field_f1=0.714 pair_f1=0.364 latency=1.30s
+[0060/200] instructie_ie_extraction_009743 parsed=True direct=True exact=False field_f1=0.667 pair_f1=0.667 latency=0.99s
+[0061/200] instructie_ie_extraction_005354 parsed=True direct=True exact=False field_f1=0.500 pair_f1=0.000 latency=0.28s
+[0062/200] instructie_schema_repair_028699 parsed=True direct=True exact=True field_f1=1.000 pair_f1=1.000 latency=1.30s
+[0063/200] instructie_ie_extraction_001444 parsed=True direct=True exact=False field_f1=0.909 pair_f1=0.800 latency=1.14s
+[0064/200] instructie_schema_repair_028846 parsed=True direct=True exact=True field_f1=1.000 pair_f1=1.000 latency=1.24s
+[0065/200] instructie_format_following_022880 parsed=True direct=True exact=True field_f1=1.000 pair_f1=1.000 latency=1.62s
+[0066/200] instructie_format_following_024765 parsed=True direct=True exact=True field_f1=1.000 pair_f1=1.000 latency=1.78s
+[0067/200] instructie_ie_extraction_010222 parsed=True direct=True exact=False field_f1=0.889 pair_f1=0.909 latency=1.56s
+[0068/200] instructie_ie_extraction_013596 parsed=True direct=True exact=False field_f1=0.400 pair_f1=0.000 latency=0.31s
+[0069/200] instructie_ie_extraction_008004 parsed=True direct=True exact=True field_f1=1.000 pair_f1=1.000 latency=1.25s
+[0070/200] instructie_format_following_023729 parsed=True direct=True exact=False field_f1=0.600 pair_f1=0.444 latency=0.83s
+[0071/200] instructie_text_to_json_018648 parsed=True direct=True exact=True field_f1=1.000 pair_f1=1.000 latency=0.94s
+[0072/200] instructie_ie_extraction_014014 parsed=True direct=True exact=False field_f1=0.833 pair_f1=0.571 latency=1.19s
+[0073/200] instructie_schema_repair_029507 parsed=True direct=True exact=True field_f1=1.000 pair_f1=1.000 latency=0.71s
+[0074/200] instructie_ie_extraction_013369 parsed=True direct=True exact=False field_f1=0.571 pair_f1=0.667 latency=0.71s
+[0075/200] instructie_ie_extraction_010893 parsed=True direct=True exact=False field_f1=0.727 pair_f1=0.667 latency=1.00s
+[0076/200] instructie_ie_extraction_012455 parsed=True direct=True exact=False field_f1=0.500 pair_f1=0.000 latency=0.37s
+[0077/200] instructie_text_to_json_020806 parsed=True direct=True exact=False field_f1=0.833 pair_f1=0.857 latency=0.92s
+[0078/200] instructie_ie_extraction_004400 parsed=True direct=True exact=False field_f1=0.800 pair_f1=0.600 latency=1.24s
+[0079/200] instructie_ie_extraction_006041 parsed=True direct=True exact=False field_f1=0.667 pair_f1=0.000 latency=0.29s
+[0080/200] instructie_schema_repair_027392 parsed=True direct=True exact=True field_f1=1.000 pair_f1=1.000 latency=1.42s
+[0081/200] instructie_text_to_json_021003 parsed=True direct=True exact=False field_f1=0.833 pair_f1=0.500 latency=1.44s
+[0082/200] instructie_ie_extraction_000940 parsed=True direct=True exact=True field_f1=1.000 pair_f1=1.000 latency=1.20s
+[0083/200] instructie_text_to_json_016862 parsed=True direct=True exact=True field_f1=1.000 pair_f1=1.000 latency=0.35s
+[0084/200] instructie_ie_extraction_008346 parsed=True direct=True exact=False field_f1=1.000 pair_f1=1.000 latency=1.28s
+[0085/200] instructie_text_to_json_019511 parsed=True direct=True exact=False field_f1=0.364 pair_f1=0.000 latency=1.63s
+[0086/200] instructie_ie_extraction_011526 parsed=True direct=True exact=False field_f1=0.500 pair_f1=0.571 latency=1.01s
+[0087/200] instructie_ie_extraction_008023 parsed=True direct=True exact=False field_f1=0.889 pair_f1=0.889 latency=1.38s
+[0088/200] instructie_ie_extraction_008667 parsed=True direct=True exact=True field_f1=1.000 pair_f1=1.000 latency=1.67s
+[0089/200] instructie_ie_extraction_000689 parsed=True direct=True exact=False field_f1=0.857 pair_f1=0.750 latency=1.04s
+[0090/200] instructie_schema_repair_027176 parsed=True direct=True exact=True field_f1=1.000 pair_f1=1.000 latency=1.50s
+[0091/200] instructie_ie_extraction_013594 parsed=True direct=True exact=False field_f1=0.500 pair_f1=0.000 latency=0.33s
+[0092/200] instructie_text_to_json_021303 parsed=True direct=True exact=False field_f1=1.000 pair_f1=0.667 latency=0.27s
+[0093/200] instructie_format_following_025982 parsed=True direct=True exact=False field_f1=0.833 pair_f1=0.444 latency=1.24s
+[0094/200] instructie_ie_extraction_005231 parsed=True direct=True exact=True field_f1=1.000 pair_f1=1.000 latency=0.27s
+[0095/200] instructie_text_to_json_019782 parsed=True direct=True exact=False field_f1=1.000 pair_f1=0.667 latency=0.69s
+[0096/200] instructie_ie_extraction_006012 parsed=True direct=True exact=False field_f1=1.000 pair_f1=1.000 latency=0.55s
+[0097/200] instructie_ie_extraction_008959 parsed=True direct=True exact=False field_f1=1.000 pair_f1=0.500 latency=0.88s
+[0098/200] instructie_ie_extraction_007994 parsed=True direct=True exact=True field_f1=1.000 pair_f1=1.000 latency=1.62s
+[0099/200] instructie_format_following_023954 parsed=True direct=True exact=False field_f1=0.615 pair_f1=0.667 latency=0.69s
+[0100/200] instructie_ie_extraction_011309 parsed=True direct=True exact=False field_f1=0.909 pair_f1=0.857 latency=0.78s
+[0101/200] instructie_ie_extraction_012422 parsed=True direct=True exact=False field_f1=0.909 pair_f1=0.286 latency=0.74s
+[0102/200] instructie_schema_repair_028224 parsed=True direct=True exact=True field_f1=1.000 pair_f1=1.000 latency=0.59s
+[0103/200] instructie_schema_repair_027348 parsed=True direct=True exact=True field_f1=1.000 pair_f1=1.000 latency=1.44s
+[0104/200] instructie_text_to_json_020625 parsed=True direct=True exact=False field_f1=0.889 pair_f1=0.000 latency=0.77s
+[0105/200] instructie_format_following_025312 parsed=True direct=True exact=False field_f1=0.750 pair_f1=0.500 latency=1.55s
+[0106/200] instructie_text_to_json_018651 parsed=True direct=True exact=False field_f1=0.875 pair_f1=0.909 latency=1.26s
+[0107/200] instructie_ie_extraction_009840 parsed=True direct=True exact=False field_f1=0.833 pair_f1=0.857 latency=0.80s
+[0108/200] instructie_ie_extraction_000565 parsed=True direct=True exact=True field_f1=1.000 pair_f1=1.000 latency=1.12s
+[0109/200] instructie_text_to_json_019999 parsed=True direct=True exact=False field_f1=0.800 pair_f1=0.667 latency=1.28s
+[0110/200] instructie_ie_extraction_002245 parsed=True direct=True exact=False field_f1=0.923 pair_f1=0.800 latency=1.13s
+[0111/200] instructie_schema_repair_027499 parsed=True direct=True exact=True field_f1=1.000 pair_f1=1.000 latency=1.70s
+[0112/200] instructie_schema_repair_028457 parsed=True direct=True exact=True field_f1=1.000 pair_f1=1.000 latency=1.37s
+[0113/200] instructie_text_to_json_020489 parsed=True direct=True exact=False field_f1=0.615 pair_f1=0.545 latency=1.06s
+[0114/200] instructie_schema_repair_029615 parsed=True direct=True exact=True field_f1=1.000 pair_f1=1.000 latency=1.48s
+[0115/200] instructie_ie_extraction_013130 parsed=True direct=True exact=False field_f1=0.800 pair_f1=0.500 latency=0.63s
+[0116/200] instructie_text_to_json_020971 parsed=True direct=True exact=False field_f1=0.769 pair_f1=0.444 latency=0.86s
+[0117/200] instructie_text_to_json_016540 parsed=True direct=True exact=False field_f1=0.800 pair_f1=0.667 latency=0.29s
+[0118/200] instructie_format_following_022852 parsed=True direct=True exact=False field_f1=0.727 pair_f1=0.800 latency=1.44s
+[0119/200] instructie_text_to_json_018105 parsed=True direct=True exact=False field_f1=0.000 pair_f1=0.000 latency=0.42s
+[0120/200] instructie_format_following_023429 parsed=True direct=True exact=True field_f1=1.000 pair_f1=1.000 latency=0.47s
+[0121/200] instructie_ie_extraction_009830 parsed=True direct=True exact=True field_f1=1.000 pair_f1=1.000 latency=0.69s
+[0122/200] instructie_ie_extraction_005008 parsed=True direct=True exact=False field_f1=0.500 pair_f1=0.400 latency=0.29s
+[0123/200] instructie_ie_extraction_003507 parsed=True direct=True exact=False field_f1=0.500 pair_f1=0.500 latency=0.33s
+[0124/200] instructie_ie_extraction_003394 parsed=True direct=True exact=False field_f1=0.000 pair_f1=0.000 latency=0.27s
+[0125/200] instructie_format_following_022846 parsed=True direct=True exact=False field_f1=0.857 pair_f1=0.400 latency=1.07s
+[0126/200] instructie_ie_extraction_002377 parsed=True direct=True exact=False field_f1=0.833 pair_f1=0.800 latency=1.28s
+[0127/200] instructie_text_to_json_018521 parsed=True direct=True exact=False field_f1=0.833 pair_f1=0.889 latency=0.90s
+[0128/200] instructie_schema_repair_028049 parsed=True direct=True exact=True field_f1=1.000 pair_f1=1.000 latency=1.36s
+[0129/200] instructie_text_to_json_016197 parsed=True direct=True exact=False field_f1=0.714 pair_f1=0.545 latency=1.44s
+[0130/200] instructie_text_to_json_021711 parsed=True direct=True exact=False field_f1=0.500 pair_f1=0.000 latency=0.38s
+[0131/200] instructie_format_following_023673 parsed=True direct=True exact=False field_f1=0.909 pair_f1=0.889 latency=0.94s
+[0132/200] instructie_ie_extraction_001514 parsed=True direct=True exact=False field_f1=0.667 pair_f1=0.600 latency=1.47s
+[0133/200] instructie_text_to_json_015773 parsed=True direct=True exact=False field_f1=0.889 pair_f1=0.750 latency=1.07s
+[0134/200] instructie_text_to_json_017404 parsed=True direct=True exact=False field_f1=0.600 pair_f1=0.500 latency=0.67s
+[0135/200] instructie_text_to_json_015128 parsed=True direct=True exact=False field_f1=0.667 pair_f1=0.000 latency=1.54s
+[0136/200] instructie_text_to_json_019284 parsed=True direct=True exact=True field_f1=1.000 pair_f1=1.000 latency=1.35s
+[0137/200] instructie_text_to_json_021895 parsed=True direct=True exact=False field_f1=0.923 pair_f1=0.889 latency=0.95s
+[0138/200] instructie_text_to_json_016330 parsed=True direct=True exact=False field_f1=0.800 pair_f1=0.667 latency=0.35s
+[0139/200] instructie_ie_extraction_006591 parsed=True direct=True exact=True field_f1=1.000 pair_f1=1.000 latency=1.19s
+[0140/200] instructie_ie_extraction_008021 parsed=True direct=True exact=False field_f1=1.000 pair_f1=1.000 latency=1.32s
+[0141/200] instructie_ie_extraction_005007 parsed=True direct=True exact=False field_f1=0.364 pair_f1=0.286 latency=0.71s
+[0142/200] instructie_schema_repair_028551 parsed=True direct=True exact=True field_f1=1.000 pair_f1=1.000 latency=0.84s
+[0143/200] instructie_ie_extraction_008559 parsed=True direct=True exact=False field_f1=1.000 pair_f1=1.000 latency=1.78s
+[0144/200] instructie_ie_extraction_013488 parsed=True direct=True exact=True field_f1=1.000 pair_f1=1.000 latency=0.37s
+[0145/200] instructie_ie_extraction_004136 parsed=True direct=True exact=False field_f1=0.667 pair_f1=0.667 latency=0.57s
+[0146/200] instructie_format_following_024288 parsed=True direct=True exact=False field_f1=0.500 pair_f1=0.400 latency=0.30s
+[0147/200] instructie_ie_extraction_001645 parsed=True direct=True exact=False field_f1=0.769 pair_f1=0.364 latency=1.43s
+[0148/200] instructie_ie_extraction_004120 parsed=True direct=True exact=False field_f1=0.857 pair_f1=0.857 latency=0.88s
+[0149/200] instructie_ie_extraction_011401 parsed=True direct=True exact=True field_f1=1.000 pair_f1=1.000 latency=0.98s
+[0150/200] instructie_text_to_json_016044 parsed=True direct=True exact=False field_f1=1.000 pair_f1=0.833 latency=1.41s
+[0151/200] instructie_ie_extraction_002791 parsed=True direct=True exact=False field_f1=0.000 pair_f1=0.000 latency=0.35s
+[0152/200] instructie_ie_extraction_005094 parsed=True direct=True exact=False field_f1=0.750 pair_f1=0.500 latency=0.41s
+[0153/200] instructie_text_to_json_022009 parsed=True direct=True exact=False field_f1=0.833 pair_f1=0.571 latency=0.74s
+[0154/200] instructie_ie_extraction_001016 parsed=True direct=True exact=False field_f1=0.333 pair_f1=0.000 latency=0.42s
+[0155/200] instructie_ie_extraction_010339 parsed=True direct=True exact=False field_f1=0.947 pair_f1=0.727 latency=1.49s
+[0156/200] instructie_format_following_025049 parsed=True direct=True exact=False field_f1=1.000 pair_f1=1.000 latency=1.32s
+[0157/200] instructie_ie_extraction_002274 parsed=True direct=True exact=False field_f1=0.923 pair_f1=0.909 latency=1.40s
+[0158/200] instructie_ie_extraction_014205 parsed=True direct=True exact=False field_f1=0.800 pair_f1=0.800 latency=1.11s
+[0159/200] instructie_format_following_026395 parsed=True direct=True exact=False field_f1=1.000 pair_f1=0.800 latency=0.52s
+[0160/200] instructie_ie_extraction_000212 parsed=True direct=True exact=False field_f1=0.857 pair_f1=0.571 latency=0.89s
+[0161/200] instructie_text_to_json_017634 parsed=True direct=True exact=False field_f1=0.000 pair_f1=0.000 latency=0.32s
+[0162/200] instructie_ie_extraction_012433 parsed=True direct=True exact=False field_f1=0.462 pair_f1=0.500 latency=1.41s
+[0163/200] instructie_text_to_json_018443 parsed=True direct=True exact=False field_f1=0.933 pair_f1=0.909 latency=1.32s
+[0164/200] instructie_ie_extraction_013141 parsed=True direct=True exact=False field_f1=0.667 pair_f1=0.500 latency=0.60s
+[0165/200] instructie_format_following_026894 parsed=True direct=True exact=False field_f1=0.769 pair_f1=0.500 latency=1.12s
+[0166/200] instructie_text_to_json_018128 parsed=True direct=True exact=True field_f1=1.000 pair_f1=1.000 latency=1.22s
+[0167/200] instructie_text_to_json_018390 parsed=True direct=True exact=False field_f1=0.545 pair_f1=0.286 latency=1.16s
+[0168/200] instructie_ie_extraction_000235 parsed=True direct=True exact=False field_f1=0.889 pair_f1=0.444 latency=1.22s
+[0169/200] instructie_ie_extraction_008668 parsed=True direct=True exact=False field_f1=0.800 pair_f1=0.500 latency=1.27s
+[0170/200] instructie_schema_repair_027216 parsed=True direct=True exact=True field_f1=1.000 pair_f1=1.000 latency=1.41s
+[0171/200] instructie_format_following_026846 parsed=True direct=True exact=False field_f1=1.000 pair_f1=1.000 latency=1.10s
+[0172/200] instructie_ie_extraction_001997 parsed=True direct=True exact=False field_f1=0.923 pair_f1=0.727 latency=1.57s
+[0173/200] instructie_ie_extraction_002978 parsed=True direct=True exact=False field_f1=0.667 pair_f1=0.667 latency=0.31s
+[0174/200] instructie_format_following_025637 parsed=True direct=True exact=False field_f1=0.941 pair_f1=0.909 latency=1.51s
+[0175/200] instructie_ie_extraction_010006 parsed=True direct=True exact=False field_f1=0.889 pair_f1=0.727 latency=1.58s
+[0176/200] instructie_ie_extraction_011164 parsed=True direct=True exact=True field_f1=1.000 pair_f1=1.000 latency=1.87s
+[0177/200] instructie_ie_extraction_001647 parsed=True direct=True exact=False field_f1=0.615 pair_f1=0.400 latency=0.90s
+[0178/200] instructie_text_to_json_020030 parsed=True direct=True exact=False field_f1=0.769 pair_f1=0.800 latency=1.46s
+[0179/200] instructie_format_following_022855 parsed=True direct=True exact=False field_f1=0.857 pair_f1=0.667 latency=1.02s
+[0180/200] instructie_format_following_024607 parsed=True direct=True exact=False field_f1=0.833 pair_f1=0.800 latency=1.21s
+[0181/200] instructie_ie_extraction_003169 parsed=True direct=True exact=False field_f1=0.667 pair_f1=0.750 latency=0.55s
+[0182/200] instructie_format_following_023361 parsed=True direct=True exact=False field_f1=0.800 pair_f1=0.667 latency=0.46s
+[0183/200] instructie_text_to_json_020830 parsed=True direct=True exact=False field_f1=0.333 pair_f1=0.222 latency=0.79s
+[0184/200] instructie_ie_extraction_014478 parsed=True direct=True exact=False field_f1=0.714 pair_f1=0.500 latency=1.09s
+[0185/200] instructie_ie_extraction_009012 parsed=True direct=True exact=False field_f1=0.875 pair_f1=0.800 latency=0.95s
+[0186/200] instructie_schema_repair_029618 parsed=True direct=True exact=True field_f1=1.000 pair_f1=1.000 latency=0.75s
+[0187/200] instructie_ie_extraction_009114 parsed=True direct=True exact=False field_f1=0.545 pair_f1=0.571 latency=1.02s
+[0188/200] instructie_ie_extraction_009317 parsed=True direct=True exact=False field_f1=0.667 pair_f1=0.571 latency=0.83s
+[0189/200] instructie_ie_extraction_001306 parsed=True direct=True exact=True field_f1=1.000 pair_f1=1.000 latency=1.02s
+[0190/200] instructie_ie_extraction_003779 parsed=True direct=True exact=False field_f1=0.600 pair_f1=0.571 latency=0.98s
+[0191/200] instructie_schema_repair_027862 parsed=True direct=True exact=True field_f1=1.000 pair_f1=1.000 latency=1.46s
+[0192/200] instructie_ie_extraction_008877 parsed=True direct=True exact=False field_f1=0.545 pair_f1=0.286 latency=1.11s
+[0193/200] instructie_text_to_json_020493 parsed=True direct=True exact=False field_f1=0.909 pair_f1=0.667 latency=0.90s
+[0194/200] instructie_ie_extraction_007798 parsed=True direct=True exact=False field_f1=1.000 pair_f1=1.000 latency=1.81s
+[0195/200] instructie_format_following_023635 parsed=True direct=True exact=False field_f1=0.400 pair_f1=0.000 latency=1.26s
+[0196/200] instructie_ie_extraction_014982 parsed=True direct=True exact=False field_f1=0.533 pair_f1=0.250 latency=0.92s
+[0197/200] instructie_ie_extraction_003789 parsed=True direct=True exact=False field_f1=0.667 pair_f1=0.571 latency=0.72s
+[0198/200] instructie_text_to_json_019526 parsed=True direct=True exact=False field_f1=0.875 pair_f1=0.727 latency=1.44s
+[0199/200] instructie_ie_extraction_014476 parsed=True direct=True exact=False field_f1=0.615 pair_f1=0.500 latency=1.34s
+[0200/200] instructie_text_to_json_019002 parsed=True direct=True exact=False field_f1=1.000 pair_f1=1.000 latency=1.40s
+
+SUMMARY
+{
+  "model_path": "outputs\\qwen_lora_merged_final",
+  "data_path": "data\\qwen_refine\\eval_holdout.jsonl",
+  "sample_count": 200,
+  "seed": 42,
+  "max_new_tokens": 256,
+  "temperature": 0.0,
+  "top_p": 1.0,
+  "parseable_rate": 1.0,
+  "direct_json_rate": 1.0,
+  "markdown_fence_rate": 0.0,
+  "exact_match_rate": 0.24,
+  "avg_field_precision": 0.8719821428571431,
+  "avg_field_recall": 0.7527056277056277,
+  "avg_field_f1": 0.7943046804416768,
+  "avg_pair_precision": 0.7515833333333335,
+  "avg_pair_recall": 0.6299999999999999,
+  "avg_pair_f1": 0.6706443001443003,
+  "avg_latency_sec": 0.9994211363792419,
+  "by_task": {
+    "format_following": {
+      "total": 28,
+      "parseable_rate": 1.0,
+      "direct_json_rate": 1.0,
+      "exact_match_rate": 0.14285714285714285
+    },
+    "ie_extraction": {
+      "total": 100,
+      "parseable_rate": 1.0,
+      "direct_json_rate": 1.0,
+      "exact_match_rate": 0.2
+    },
+    "schema_repair": {
+      "total": 20,
+      "parseable_rate": 1.0,
+      "direct_json_rate": 1.0,
+      "exact_match_rate": 0.95
+    },
+    "text_to_json": {
+      "total": 52,
+      "parseable_rate": 1.0,
+      "direct_json_rate": 1.0,
+      "exact_match_rate": 0.09615384615384616
+    }
+  }
+}
+
+Saved summary to results\qwen_refine_compare\original_holdout\summary.json
+Saved detailed results to results\qwen_refine_compare\original_holdout\results.jsonl
+Saved failure samples to results\qwen_refine_compare\original_holdout\failure_samples.jsonl
+```
+
+Exit code: 0
+
+## Refine comparison eval refined_holdout - 2026-05-20 23:45:52 +08:00
+
+```powershell
+.\\.venv\\Scripts\\python.exe -u scripts\\evaluate_qwen_valid_jsonl.py --model-path outputs\qwen_lora_merged_refined_best --data-path data\qwen_refine\eval_holdout.jsonl --limit 0 --out-dir results\qwen_refine_compare\refined_holdout
+```
+
+```text
+Loading model: outputs\qwen_lora_merged_refined_best
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+System.Management.Automation.RemoteException
+Loading weights:   0%|          | 0/338 [00:00<?, ?it/s]
+Loading weights:  17%|█▋        | 59/338 [00:00<00:00, 573.86it/s]
+Loading weights:  43%|████▎     | 147/338 [00:00<00:00, 749.02it/s]
+Loading weights:  72%|███████▏  | 243/338 [00:00<00:00, 836.23it/s]
+Loading weights: 100%|██████████| 338/338 [00:00<00:00, 838.83it/s]
+Evaluating 200 samples from data\qwen_refine\eval_holdout.jsonl
+Generation: max_new_tokens=256, temperature=0.0, top_p=1.0
+[0001/200] instructie_text_to_json_017005 parsed=True direct=True exact=False field_f1=0.889 pair_f1=0.857 latency=1.13s
+[0002/200] instructie_ie_extraction_001706 parsed=True direct=True exact=False field_f1=0.800 pair_f1=0.750 latency=0.97s
+[0003/200] instructie_ie_extraction_010101 parsed=True direct=True exact=True field_f1=1.000 pair_f1=1.000 latency=1.81s
+[0004/200] instructie_schema_repair_027177 parsed=True direct=True exact=True field_f1=1.000 pair_f1=1.000 latency=1.06s
+[0005/200] instructie_ie_extraction_013824 parsed=True direct=True exact=False field_f1=0.824 pair_f1=0.727 latency=1.60s
+[0006/200] instructie_format_following_024997 parsed=True direct=True exact=False field_f1=0.667 pair_f1=0.667 latency=1.09s
+[0007/200] instructie_ie_extraction_006360 parsed=True direct=True exact=True field_f1=1.000 pair_f1=1.000 latency=1.02s
+[0008/200] instructie_ie_extraction_008685 parsed=True direct=True exact=False field_f1=1.000 pair_f1=0.667 latency=0.92s
+[0009/200] instructie_text_to_json_016928 parsed=True direct=True exact=False field_f1=0.923 pair_f1=0.889 latency=0.87s
+[0010/200] instructie_text_to_json_015810 parsed=True direct=True exact=False field_f1=0.545 pair_f1=0.400 latency=1.01s
+[0011/200] instructie_ie_extraction_009117 parsed=True direct=True exact=False field_f1=0.462 pair_f1=0.250 latency=1.49s
+[0012/200] instructie_ie_extraction_003965 parsed=True direct=True exact=False field_f1=0.750 pair_f1=0.571 latency=0.61s
+[0013/200] instructie_ie_extraction_003361 parsed=True direct=True exact=False field_f1=0.000 pair_f1=0.000 latency=0.30s
+[0014/200] instructie_ie_extraction_002683 parsed=True direct=True exact=False field_f1=0.000 pair_f1=0.000 latency=0.34s
+[0015/200] instructie_ie_extraction_013510 parsed=True direct=True exact=False field_f1=0.000 pair_f1=0.000 latency=0.56s
+[0016/200] instructie_schema_repair_028312 parsed=True direct=True exact=True field_f1=1.000 pair_f1=1.000 latency=1.23s
+[0017/200] instructie_ie_extraction_012423 parsed=True direct=True exact=False field_f1=0.727 pair_f1=0.545 latency=1.37s
+[0018/200] instructie_ie_extraction_007020 parsed=True direct=True exact=True field_f1=1.000 pair_f1=1.000 latency=1.05s
+[0019/200] instructie_text_to_json_017338 parsed=True direct=True exact=False field_f1=0.800 pair_f1=0.750 latency=0.86s
+[0020/200] instructie_format_following_025727 parsed=True direct=True exact=False field_f1=0.769 pair_f1=0.400 latency=1.39s
+[0021/200] instructie_ie_extraction_010336 parsed=True direct=True exact=True field_f1=1.000 pair_f1=1.000 latency=1.59s
+[0022/200] instructie_text_to_json_021369 parsed=True direct=True exact=True field_f1=1.000 pair_f1=1.000 latency=0.51s
+[0023/200] instructie_ie_extraction_005182 parsed=True direct=True exact=False field_f1=0.333 pair_f1=0.400 latency=0.72s
+[0024/200] instructie_text_to_json_021875 parsed=True direct=True exact=False field_f1=0.625 pair_f1=0.000 latency=1.11s
+[0025/200] instructie_text_to_json_020952 parsed=True direct=True exact=False field_f1=0.750 pair_f1=0.800 latency=0.81s
+[0026/200] instructie_schema_repair_029627 parsed=True direct=True exact=False field_f1=0.571 pair_f1=0.286 latency=0.75s
+[0027/200] instructie_text_to_json_021540 parsed=True direct=True exact=False field_f1=0.800 pair_f1=0.500 latency=0.34s
+[0028/200] instructie_text_to_json_019543 parsed=True direct=True exact=False field_f1=0.909 pair_f1=0.857 latency=0.81s
+[0029/200] instructie_text_to_json_018448 parsed=True direct=True exact=False field_f1=0.857 pair_f1=0.909 latency=1.00s
+[0030/200] instructie_ie_extraction_003224 parsed=True direct=True exact=False field_f1=0.800 pair_f1=0.667 latency=0.29s
+[0031/200] instructie_ie_extraction_013087 parsed=True direct=True exact=False field_f1=0.800 pair_f1=0.000 latency=0.93s
+[0032/200] instructie_ie_extraction_013338 parsed=True direct=True exact=False field_f1=0.800 pair_f1=0.667 latency=0.64s
+[0033/200] instructie_ie_extraction_007554 parsed=True direct=True exact=False field_f1=1.000 pair_f1=0.857 latency=1.04s
+[0034/200] instructie_format_following_023031 parsed=True direct=True exact=False field_f1=0.833 pair_f1=0.545 latency=1.25s
+[0035/200] instructie_schema_repair_028587 parsed=True direct=True exact=True field_f1=1.000 pair_f1=1.000 latency=1.50s
+[0036/200] instructie_text_to_json_021627 parsed=True direct=True exact=False field_f1=1.000 pair_f1=0.000 latency=0.51s
+[0037/200] instructie_format_following_023524 parsed=True direct=True exact=False field_f1=0.800 pair_f1=0.667 latency=0.38s
+[0038/200] instructie_ie_extraction_011118 parsed=True direct=True exact=True field_f1=1.000 pair_f1=1.000 latency=1.95s
+[0039/200] instructie_ie_extraction_004593 parsed=True direct=True exact=False field_f1=0.889 pair_f1=0.857 latency=0.86s
+[0040/200] instructie_text_to_json_020390 parsed=True direct=True exact=True field_f1=1.000 pair_f1=1.000 latency=1.91s
+[0041/200] instructie_text_to_json_022266 parsed=True direct=True exact=False field_f1=0.625 pair_f1=0.444 latency=0.96s
+[0042/200] instructie_text_to_json_020349 parsed=True direct=True exact=False field_f1=0.941 pair_f1=0.909 latency=1.49s
+[0043/200] instructie_format_following_023983 parsed=True direct=True exact=True field_f1=1.000 pair_f1=1.000 latency=0.94s
+[0044/200] instructie_ie_extraction_006089 parsed=True direct=True exact=True field_f1=1.000 pair_f1=1.000 latency=0.28s
+[0045/200] instructie_ie_extraction_008544 parsed=True direct=True exact=False field_f1=0.857 pair_f1=0.909 latency=1.18s
+[0046/200] instructie_text_to_json_021936 parsed=True direct=True exact=False field_f1=0.824 pair_f1=0.800 latency=1.08s
+[0047/200] instructie_format_following_025314 parsed=True direct=True exact=False field_f1=0.933 pair_f1=0.889 latency=1.10s
+[0048/200] instructie_ie_extraction_003208 parsed=True direct=True exact=True field_f1=1.000 pair_f1=1.000 latency=0.35s
+[0049/200] instructie_ie_extraction_006498 parsed=True direct=True exact=True field_f1=1.000 pair_f1=1.000 latency=0.93s
+[0050/200] instructie_ie_extraction_001916 parsed=True direct=True exact=False field_f1=0.600 pair_f1=0.500 latency=0.98s
+[0051/200] instructie_text_to_json_017502 parsed=True direct=True exact=False field_f1=0.571 pair_f1=0.000 latency=0.32s
+[0052/200] instructie_schema_repair_029816 parsed=True direct=True exact=True field_f1=1.000 pair_f1=1.000 latency=1.11s
+[0053/200] instructie_ie_extraction_014794 parsed=True direct=True exact=False field_f1=0.833 pair_f1=0.750 latency=1.21s
+[0054/200] instructie_ie_extraction_008524 parsed=True direct=True exact=False field_f1=1.000 pair_f1=1.000 latency=1.22s
+[0055/200] instructie_text_to_json_019876 parsed=True direct=True exact=False field_f1=0.737 pair_f1=0.500 latency=1.43s
+[0056/200] instructie_ie_extraction_007505 parsed=True direct=True exact=False field_f1=0.889 pair_f1=0.857 latency=1.15s
+[0057/200] instructie_text_to_json_020537 parsed=True direct=True exact=False field_f1=0.875 pair_f1=0.600 latency=1.54s
+[0058/200] instructie_format_following_026087 parsed=True direct=True exact=False field_f1=0.727 pair_f1=0.667 latency=0.95s
+[0059/200] instructie_format_following_025815 parsed=True direct=True exact=False field_f1=0.571 pair_f1=0.400 latency=1.18s
+[0060/200] instructie_ie_extraction_009743 parsed=True direct=True exact=False field_f1=0.667 pair_f1=0.667 latency=1.00s
+[0061/200] instructie_ie_extraction_005354 parsed=True direct=True exact=False field_f1=0.500 pair_f1=0.000 latency=0.28s
+[0062/200] instructie_schema_repair_028699 parsed=True direct=True exact=True field_f1=1.000 pair_f1=1.000 latency=1.30s
+[0063/200] instructie_ie_extraction_001444 parsed=True direct=True exact=False field_f1=0.909 pair_f1=0.800 latency=1.16s
+[0064/200] instructie_schema_repair_028846 parsed=True direct=True exact=True field_f1=1.000 pair_f1=1.000 latency=1.25s
+[0065/200] instructie_format_following_022880 parsed=True direct=True exact=True field_f1=1.000 pair_f1=1.000 latency=1.63s
+[0066/200] instructie_format_following_024765 parsed=True direct=True exact=True field_f1=1.000 pair_f1=1.000 latency=1.82s
+[0067/200] instructie_ie_extraction_010222 parsed=True direct=True exact=False field_f1=0.889 pair_f1=0.909 latency=1.58s
+[0068/200] instructie_ie_extraction_013596 parsed=True direct=True exact=False field_f1=0.400 pair_f1=0.000 latency=0.31s
+[0069/200] instructie_ie_extraction_008004 parsed=True direct=True exact=True field_f1=1.000 pair_f1=1.000 latency=1.24s
+[0070/200] instructie_format_following_023729 parsed=True direct=True exact=False field_f1=0.600 pair_f1=0.444 latency=0.85s
+[0071/200] instructie_text_to_json_018648 parsed=True direct=True exact=True field_f1=1.000 pair_f1=1.000 latency=0.95s
+[0072/200] instructie_ie_extraction_014014 parsed=True direct=True exact=False field_f1=0.833 pair_f1=0.000 latency=1.21s
+[0073/200] instructie_schema_repair_029507 parsed=True direct=True exact=True field_f1=1.000 pair_f1=1.000 latency=0.71s
+[0074/200] instructie_ie_extraction_013369 parsed=True direct=True exact=False field_f1=0.571 pair_f1=0.667 latency=0.72s
+[0075/200] instructie_ie_extraction_010893 parsed=True direct=True exact=False field_f1=0.727 pair_f1=0.667 latency=1.02s
+[0076/200] instructie_ie_extraction_012455 parsed=True direct=True exact=False field_f1=0.500 pair_f1=0.000 latency=0.37s
+[0077/200] instructie_text_to_json_020806 parsed=True direct=True exact=False field_f1=0.833 pair_f1=0.857 latency=0.92s
+[0078/200] instructie_ie_extraction_004400 parsed=True direct=True exact=False field_f1=0.800 pair_f1=0.600 latency=1.23s
+[0079/200] instructie_ie_extraction_006041 parsed=True direct=True exact=False field_f1=0.667 pair_f1=0.000 latency=0.29s
+[0080/200] instructie_schema_repair_027392 parsed=True direct=True exact=True field_f1=1.000 pair_f1=1.000 latency=1.44s
+[0081/200] instructie_text_to_json_021003 parsed=True direct=True exact=False field_f1=0.833 pair_f1=0.500 latency=1.45s
+[0082/200] instructie_ie_extraction_000940 parsed=True direct=True exact=True field_f1=1.000 pair_f1=1.000 latency=1.22s
+[0083/200] instructie_text_to_json_016862 parsed=True direct=True exact=True field_f1=1.000 pair_f1=1.000 latency=0.36s
+[0084/200] instructie_ie_extraction_008346 parsed=True direct=True exact=False field_f1=1.000 pair_f1=1.000 latency=1.28s
+[0085/200] instructie_text_to_json_019511 parsed=True direct=True exact=False field_f1=0.364 pair_f1=0.000 latency=1.66s
+[0086/200] instructie_ie_extraction_011526 parsed=True direct=True exact=False field_f1=0.500 pair_f1=0.571 latency=1.02s
+[0087/200] instructie_ie_extraction_008023 parsed=True direct=True exact=False field_f1=0.889 pair_f1=0.889 latency=1.39s
+[0088/200] instructie_ie_extraction_008667 parsed=True direct=True exact=True field_f1=1.000 pair_f1=1.000 latency=1.65s
+[0089/200] instructie_ie_extraction_000689 parsed=True direct=True exact=False field_f1=0.857 pair_f1=0.750 latency=1.04s
+[0090/200] instructie_schema_repair_027176 parsed=True direct=True exact=True field_f1=1.000 pair_f1=1.000 latency=1.53s
+[0091/200] instructie_ie_extraction_013594 parsed=True direct=True exact=False field_f1=0.500 pair_f1=0.000 latency=0.35s
+[0092/200] instructie_text_to_json_021303 parsed=True direct=True exact=False field_f1=1.000 pair_f1=0.667 latency=0.28s
+[0093/200] instructie_format_following_025982 parsed=True direct=True exact=False field_f1=0.833 pair_f1=0.444 latency=1.25s
+[0094/200] instructie_ie_extraction_005231 parsed=True direct=True exact=True field_f1=1.000 pair_f1=1.000 latency=0.28s
+[0095/200] instructie_text_to_json_019782 parsed=True direct=True exact=False field_f1=1.000 pair_f1=0.667 latency=0.70s
+[0096/200] instructie_ie_extraction_006012 parsed=True direct=True exact=False field_f1=1.000 pair_f1=1.000 latency=0.54s
+[0097/200] instructie_ie_extraction_008959 parsed=True direct=True exact=False field_f1=1.000 pair_f1=0.500 latency=0.88s
+[0098/200] instructie_ie_extraction_007994 parsed=True direct=True exact=True field_f1=1.000 pair_f1=1.000 latency=1.63s
+[0099/200] instructie_format_following_023954 parsed=True direct=True exact=False field_f1=0.615 pair_f1=0.667 latency=0.70s
+[0100/200] instructie_ie_extraction_011309 parsed=True direct=True exact=False field_f1=0.909 pair_f1=0.857 latency=0.79s
+[0101/200] instructie_ie_extraction_012422 parsed=True direct=True exact=False field_f1=0.909 pair_f1=0.286 latency=0.75s
+[0102/200] instructie_schema_repair_028224 parsed=True direct=True exact=True field_f1=1.000 pair_f1=1.000 latency=0.59s
+[0103/200] instructie_schema_repair_027348 parsed=True direct=True exact=True field_f1=1.000 pair_f1=1.000 latency=1.43s
+[0104/200] instructie_text_to_json_020625 parsed=True direct=True exact=False field_f1=0.889 pair_f1=0.000 latency=0.76s
+[0105/200] instructie_format_following_025312 parsed=True direct=True exact=False field_f1=0.750 pair_f1=0.500 latency=1.55s
+[0106/200] instructie_text_to_json_018651 parsed=True direct=True exact=False field_f1=0.875 pair_f1=0.909 latency=1.26s
+[0107/200] instructie_ie_extraction_009840 parsed=True direct=True exact=False field_f1=0.833 pair_f1=0.857 latency=0.81s
+[0108/200] instructie_ie_extraction_000565 parsed=True direct=True exact=True field_f1=1.000 pair_f1=1.000 latency=1.12s
+[0109/200] instructie_text_to_json_019999 parsed=True direct=True exact=False field_f1=0.800 pair_f1=0.667 latency=1.30s
+[0110/200] instructie_ie_extraction_002245 parsed=True direct=True exact=False field_f1=0.923 pair_f1=0.800 latency=1.13s
+[0111/200] instructie_schema_repair_027499 parsed=True direct=True exact=True field_f1=1.000 pair_f1=1.000 latency=1.72s
+[0112/200] instructie_schema_repair_028457 parsed=True direct=True exact=True field_f1=1.000 pair_f1=1.000 latency=1.38s
+[0113/200] instructie_text_to_json_020489 parsed=True direct=True exact=False field_f1=0.615 pair_f1=0.545 latency=1.07s
+[0114/200] instructie_schema_repair_029615 parsed=True direct=True exact=True field_f1=1.000 pair_f1=1.000 latency=1.50s
+[0115/200] instructie_ie_extraction_013130 parsed=True direct=True exact=False field_f1=0.800 pair_f1=0.500 latency=0.63s
+[0116/200] instructie_text_to_json_020971 parsed=True direct=True exact=False field_f1=0.857 pair_f1=0.545 latency=1.24s
+[0117/200] instructie_text_to_json_016540 parsed=True direct=True exact=False field_f1=0.800 pair_f1=0.667 latency=0.30s
+[0118/200] instructie_format_following_022852 parsed=True direct=True exact=False field_f1=0.727 pair_f1=0.800 latency=1.47s
+[0119/200] instructie_text_to_json_018105 parsed=True direct=True exact=False field_f1=0.000 pair_f1=0.000 latency=0.43s
+[0120/200] instructie_format_following_023429 parsed=True direct=True exact=True field_f1=1.000 pair_f1=1.000 latency=0.48s
+[0121/200] instructie_ie_extraction_009830 parsed=True direct=True exact=True field_f1=1.000 pair_f1=1.000 latency=0.68s
+[0122/200] instructie_ie_extraction_005008 parsed=True direct=True exact=False field_f1=0.500 pair_f1=0.400 latency=0.29s
+[0123/200] instructie_ie_extraction_003507 parsed=True direct=True exact=False field_f1=0.500 pair_f1=0.500 latency=0.32s
+[0124/200] instructie_ie_extraction_003394 parsed=True direct=True exact=False field_f1=0.000 pair_f1=0.000 latency=0.28s
+[0125/200] instructie_format_following_022846 parsed=True direct=True exact=False field_f1=0.857 pair_f1=0.400 latency=1.07s
+[0126/200] instructie_ie_extraction_002377 parsed=True direct=True exact=False field_f1=0.833 pair_f1=0.800 latency=1.30s
+[0127/200] instructie_text_to_json_018521 parsed=True direct=True exact=True field_f1=1.000 pair_f1=1.000 latency=1.16s
+[0128/200] instructie_schema_repair_028049 parsed=True direct=True exact=True field_f1=1.000 pair_f1=1.000 latency=1.36s
+[0129/200] instructie_text_to_json_016197 parsed=True direct=True exact=False field_f1=0.615 pair_f1=0.400 latency=1.23s
+[0130/200] instructie_text_to_json_021711 parsed=True direct=True exact=False field_f1=0.500 pair_f1=0.000 latency=0.38s
+[0131/200] instructie_format_following_023673 parsed=True direct=True exact=False field_f1=0.909 pair_f1=0.889 latency=0.96s
+[0132/200] instructie_ie_extraction_001514 parsed=True direct=True exact=False field_f1=0.667 pair_f1=0.600 latency=1.48s
+[0133/200] instructie_text_to_json_015773 parsed=True direct=True exact=False field_f1=0.889 pair_f1=0.750 latency=1.10s
+[0134/200] instructie_text_to_json_017404 parsed=True direct=True exact=False field_f1=0.600 pair_f1=0.500 latency=0.66s
+[0135/200] instructie_text_to_json_015128 parsed=True direct=True exact=False field_f1=0.667 pair_f1=0.000 latency=1.55s
+[0136/200] instructie_text_to_json_019284 parsed=True direct=True exact=True field_f1=1.000 pair_f1=1.000 latency=1.35s
+[0137/200] instructie_text_to_json_021895 parsed=True direct=True exact=False field_f1=0.923 pair_f1=0.889 latency=0.98s
+[0138/200] instructie_text_to_json_016330 parsed=True direct=True exact=False field_f1=0.800 pair_f1=0.667 latency=0.34s
+[0139/200] instructie_ie_extraction_006591 parsed=True direct=True exact=True field_f1=1.000 pair_f1=1.000 latency=1.22s
+[0140/200] instructie_ie_extraction_008021 parsed=True direct=True exact=False field_f1=1.000 pair_f1=1.000 latency=1.34s
+[0141/200] instructie_ie_extraction_005007 parsed=True direct=True exact=False field_f1=0.364 pair_f1=0.286 latency=0.71s
+[0142/200] instructie_schema_repair_028551 parsed=True direct=True exact=True field_f1=1.000 pair_f1=1.000 latency=0.85s
+[0143/200] instructie_ie_extraction_008559 parsed=True direct=True exact=False field_f1=1.000 pair_f1=1.000 latency=1.81s
+[0144/200] instructie_ie_extraction_013488 parsed=True direct=True exact=True field_f1=1.000 pair_f1=1.000 latency=0.39s
+[0145/200] instructie_ie_extraction_004136 parsed=True direct=True exact=False field_f1=0.667 pair_f1=0.667 latency=0.57s
+[0146/200] instructie_format_following_024288 parsed=True direct=True exact=False field_f1=0.500 pair_f1=0.400 latency=0.30s
+[0147/200] instructie_ie_extraction_001645 parsed=True direct=True exact=False field_f1=0.769 pair_f1=0.364 latency=1.45s
+[0148/200] instructie_ie_extraction_004120 parsed=True direct=True exact=False field_f1=0.857 pair_f1=0.857 latency=0.89s
+[0149/200] instructie_ie_extraction_011401 parsed=True direct=True exact=True field_f1=1.000 pair_f1=1.000 latency=0.99s
+[0150/200] instructie_text_to_json_016044 parsed=True direct=True exact=False field_f1=1.000 pair_f1=0.833 latency=1.41s
+[0151/200] instructie_ie_extraction_002791 parsed=True direct=True exact=False field_f1=0.000 pair_f1=0.000 latency=0.34s
+[0152/200] instructie_ie_extraction_005094 parsed=True direct=True exact=False field_f1=0.750 pair_f1=0.500 latency=0.42s
+[0153/200] instructie_text_to_json_022009 parsed=True direct=True exact=False field_f1=0.833 pair_f1=0.571 latency=0.74s
+[0154/200] instructie_ie_extraction_001016 parsed=True direct=True exact=False field_f1=0.333 pair_f1=0.000 latency=0.43s
+[0155/200] instructie_ie_extraction_010339 parsed=True direct=True exact=False field_f1=0.947 pair_f1=0.727 latency=1.52s
+[0156/200] instructie_format_following_025049 parsed=True direct=True exact=False field_f1=0.857 pair_f1=0.909 latency=1.18s
+[0157/200] instructie_ie_extraction_002274 parsed=True direct=True exact=False field_f1=0.923 pair_f1=0.909 latency=1.42s
+[0158/200] instructie_ie_extraction_014205 parsed=True direct=True exact=False field_f1=0.800 pair_f1=0.800 latency=1.13s
+[0159/200] instructie_format_following_026395 parsed=True direct=True exact=False field_f1=1.000 pair_f1=0.800 latency=0.52s
+[0160/200] instructie_ie_extraction_000212 parsed=True direct=True exact=False field_f1=0.857 pair_f1=0.571 latency=0.91s
+[0161/200] instructie_text_to_json_017634 parsed=True direct=True exact=False field_f1=0.000 pair_f1=0.000 latency=0.31s
+[0162/200] instructie_ie_extraction_012433 parsed=True direct=True exact=False field_f1=0.462 pair_f1=0.500 latency=1.29s
+[0163/200] instructie_text_to_json_018443 parsed=True direct=True exact=False field_f1=0.933 pair_f1=0.909 latency=1.25s
+[0164/200] instructie_ie_extraction_013141 parsed=True direct=True exact=False field_f1=0.667 pair_f1=0.500 latency=0.48s
+[0165/200] instructie_format_following_026894 parsed=True direct=True exact=False field_f1=0.769 pair_f1=0.500 latency=1.07s
+[0166/200] instructie_text_to_json_018128 parsed=True direct=True exact=True field_f1=1.000 pair_f1=1.000 latency=1.14s
+[0167/200] instructie_text_to_json_018390 parsed=True direct=True exact=False field_f1=0.545 pair_f1=0.286 latency=1.09s
+[0168/200] instructie_ie_extraction_000235 parsed=True direct=True exact=False field_f1=0.889 pair_f1=0.444 latency=1.16s
+[0169/200] instructie_ie_extraction_008668 parsed=True direct=True exact=False field_f1=0.800 pair_f1=0.500 latency=1.22s
+[0170/200] instructie_schema_repair_027216 parsed=True direct=True exact=True field_f1=1.000 pair_f1=1.000 latency=1.42s
+[0171/200] instructie_format_following_026846 parsed=True direct=True exact=False field_f1=1.000 pair_f1=1.000 latency=1.12s
+[0172/200] instructie_ie_extraction_001997 parsed=True direct=True exact=False field_f1=0.923 pair_f1=0.727 latency=1.61s
+[0173/200] instructie_ie_extraction_002978 parsed=True direct=True exact=False field_f1=0.667 pair_f1=0.667 latency=0.32s
+[0174/200] instructie_format_following_025637 parsed=True direct=True exact=False field_f1=0.941 pair_f1=0.909 latency=1.53s
+[0175/200] instructie_ie_extraction_010006 parsed=True direct=True exact=False field_f1=0.889 pair_f1=0.727 latency=1.60s
+[0176/200] instructie_ie_extraction_011164 parsed=True direct=True exact=True field_f1=1.000 pair_f1=1.000 latency=1.88s
+[0177/200] instructie_ie_extraction_001647 parsed=True direct=True exact=False field_f1=0.714 pair_f1=0.545 latency=1.25s
+[0178/200] instructie_text_to_json_020030 parsed=True direct=True exact=False field_f1=0.833 pair_f1=0.667 latency=1.24s
+[0179/200] instructie_format_following_022855 parsed=True direct=True exact=False field_f1=0.857 pair_f1=0.667 latency=1.03s
+[0180/200] instructie_format_following_024607 parsed=True direct=True exact=False field_f1=0.727 pair_f1=0.600 latency=1.11s
+[0181/200] instructie_ie_extraction_003169 parsed=True direct=True exact=False field_f1=0.667 pair_f1=0.750 latency=0.57s
+[0182/200] instructie_format_following_023361 parsed=True direct=True exact=False field_f1=0.800 pair_f1=0.667 latency=0.45s
+[0183/200] instructie_text_to_json_020830 parsed=True direct=True exact=False field_f1=0.333 pair_f1=0.222 latency=0.79s
+[0184/200] instructie_ie_extraction_014478 parsed=True direct=True exact=False field_f1=0.714 pair_f1=0.500 latency=1.10s
+[0185/200] instructie_ie_extraction_009012 parsed=True direct=True exact=False field_f1=0.875 pair_f1=0.800 latency=0.98s
+[0186/200] instructie_schema_repair_029618 parsed=True direct=True exact=True field_f1=1.000 pair_f1=1.000 latency=0.77s
+[0187/200] instructie_ie_extraction_009114 parsed=True direct=True exact=False field_f1=0.545 pair_f1=0.571 latency=1.03s
+[0188/200] instructie_ie_extraction_009317 parsed=True direct=True exact=False field_f1=0.667 pair_f1=0.571 latency=0.83s
+[0189/200] instructie_ie_extraction_001306 parsed=True direct=True exact=True field_f1=1.000 pair_f1=1.000 latency=1.04s
+[0190/200] instructie_ie_extraction_003779 parsed=True direct=True exact=False field_f1=0.600 pair_f1=0.571 latency=0.96s
+[0191/200] instructie_schema_repair_027862 parsed=True direct=True exact=True field_f1=1.000 pair_f1=1.000 latency=1.39s
+[0192/200] instructie_ie_extraction_008877 parsed=True direct=True exact=False field_f1=0.545 pair_f1=0.286 latency=1.11s
+[0193/200] instructie_text_to_json_020493 parsed=True direct=True exact=False field_f1=0.909 pair_f1=0.667 latency=0.90s
+[0194/200] instructie_ie_extraction_007798 parsed=True direct=True exact=False field_f1=1.000 pair_f1=1.000 latency=1.82s
+[0195/200] instructie_format_following_023635 parsed=True direct=True exact=False field_f1=0.400 pair_f1=0.000 latency=1.26s
+[0196/200] instructie_ie_extraction_014982 parsed=True direct=True exact=False field_f1=0.533 pair_f1=0.250 latency=0.93s
+[0197/200] instructie_ie_extraction_003789 parsed=True direct=True exact=False field_f1=0.667 pair_f1=0.571 latency=0.74s
+[0198/200] instructie_text_to_json_019526 parsed=True direct=True exact=False field_f1=0.875 pair_f1=0.727 latency=1.46s
+[0199/200] instructie_ie_extraction_014476 parsed=True direct=True exact=False field_f1=0.615 pair_f1=0.500 latency=1.34s
+[0200/200] instructie_text_to_json_019002 parsed=True direct=True exact=False field_f1=1.000 pair_f1=1.000 latency=1.40s
+
+SUMMARY
+{
+  "model_path": "outputs\\qwen_lora_merged_refined_best",
+  "data_path": "data\\qwen_refine\\eval_holdout.jsonl",
+  "sample_count": 200,
+  "seed": 42,
+  "max_new_tokens": 256,
+  "temperature": 0.0,
+  "top_p": 1.0,
+  "parseable_rate": 1.0,
+  "direct_json_rate": 1.0,
+  "markdown_fence_rate": 0.0,
+  "exact_match_rate": 0.25,
+  "avg_field_precision": 0.8716011904761904,
+  "avg_field_recall": 0.7537949134199134,
+  "avg_field_f1": 0.7948327634697598,
+  "avg_pair_precision": 0.7486666666666667,
+  "avg_pair_recall": 0.6285833333333333,
+  "avg_pair_f1": 0.6685057720057721,
+  "avg_latency_sec": 1.0108925700187683,
+  "by_task": {
+    "format_following": {
+      "total": 28,
+      "parseable_rate": 1.0,
+      "direct_json_rate": 1.0,
+      "exact_match_rate": 0.14285714285714285
+    },
+    "ie_extraction": {
+      "total": 100,
+      "parseable_rate": 1.0,
+      "direct_json_rate": 1.0,
+      "exact_match_rate": 0.2
+    },
+    "schema_repair": {
+      "total": 20,
+      "parseable_rate": 1.0,
+      "direct_json_rate": 1.0,
+      "exact_match_rate": 0.95
+    },
+    "text_to_json": {
+      "total": 52,
+      "parseable_rate": 1.0,
+      "direct_json_rate": 1.0,
+      "exact_match_rate": 0.1346153846153846
+    }
+  }
+}
+
+Saved summary to results\qwen_refine_compare\refined_holdout\summary.json
+Saved detailed results to results\qwen_refine_compare\refined_holdout\results.jsonl
+Saved failure samples to results\qwen_refine_compare\refined_holdout\failure_samples.jsonl
+```
+
+Exit code: 0

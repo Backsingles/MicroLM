@@ -62,6 +62,24 @@ class InstructIEDataset(Dataset):
 
         print(f"  Loaded {len(self.samples)} samples from {data_path}")
 
+    @staticmethod
+    def _as_token_ids(encoded) -> list[int]:
+        """Normalize tokenizer outputs to a plain list of token ids."""
+        try:
+            if "input_ids" in encoded:
+                encoded = encoded["input_ids"]
+        except (KeyError, TypeError):
+            pass
+        if hasattr(encoded, "ids"):
+            return list(encoded.ids)
+        if torch.is_tensor(encoded):
+            return encoded.detach().cpu().tolist()
+        if encoded and isinstance(encoded[0], list):
+            encoded = encoded[0]
+        if hasattr(encoded, "ids"):
+            return list(encoded.ids)
+        return list(encoded)
+
     def _process_sample(self, messages: list[dict]) -> dict | None:
         # Build full message list with system prompt
         full_messages = []
@@ -71,16 +89,20 @@ class InstructIEDataset(Dataset):
             full_messages.append(msg)
 
         # Tokenize full conversation
-        full_ids = self.tokenizer.apply_chat_template(
-            full_messages, tokenize=True, truncation=True, max_length=self.max_length
+        full_ids = self._as_token_ids(
+            self.tokenizer.apply_chat_template(
+                full_messages, tokenize=True
+            )
         )
         if len(full_ids) < 2:
             return None
 
         # Build prefix (everything before assistant output)
         prefix_messages = full_messages[:-1]  # exclude assistant
-        prefix_ids = self.tokenizer.apply_chat_template(
-            prefix_messages, tokenize=True, add_generation_prompt=True
+        prefix_ids = self._as_token_ids(
+            self.tokenizer.apply_chat_template(
+                prefix_messages, tokenize=True, add_generation_prompt=True
+            )
         )
 
         # Verify prefix matches
@@ -90,12 +112,16 @@ class InstructIEDataset(Dataset):
         else:
             prefix_len = len(prefix_ids)
 
-        # Build labels: -100 for non-assistant tokens
-        labels = [-100] * prefix_len + full_ids[prefix_len:]
+        prefix_len = min(prefix_len, len(full_ids))
 
-        # Truncate to max_length
-        input_ids = full_ids[:self.max_length]
-        labels = labels[:self.max_length]
+        # Build labels: -100 for non-assistant tokens. For long IE prompts,
+        # keep the tail so the assistant JSON answer is not truncated away.
+        labels_full = [-100] * prefix_len + full_ids[prefix_len:]
+        start = max(0, len(full_ids) - self.max_length)
+        input_ids = full_ids[start:]
+        labels = labels_full[start:]
+        if all(label == -100 for label in labels):
+            return None
 
         return {"input_ids": input_ids, "labels": labels}
 

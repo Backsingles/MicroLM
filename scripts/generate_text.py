@@ -30,12 +30,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--vocab-path",
         type=Path,
-        default=Path("output/tinystories_bpe_10k/vocab.json"),
+        default=Path("outputs/tokenizer_full_clean/vocab.json"),
     )
     parser.add_argument(
         "--merges-path",
         type=Path,
-        default=Path("output/tinystories_bpe_10k/merge.txt"),
+        default=Path("outputs/tokenizer_full_clean/merge.txt"),
     )
     parser.add_argument(
         "--prompt",
@@ -181,8 +181,14 @@ def resolve_device(device_arg: str) -> str:
 
 
 def load_model_config(args: argparse.Namespace, vocab_size: int) -> dict[str, int | float]:
-    if args.config_path is not None:
-        with args.config_path.open("r", encoding="utf-8") as f:
+    config_path = args.config_path
+    if config_path is None:
+        inferred = args.checkpoint_path.parent / "model_config.json"
+        if inferred.exists():
+            config_path = inferred
+
+    if config_path is not None:
+        with config_path.open("r", encoding="utf-8") as f:
             raw_config = json.load(f)
         return {
             "vocab_size": int(raw_config.get("vocab_size", vocab_size)),

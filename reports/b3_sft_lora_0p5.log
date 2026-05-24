@@ -1,0 +1,27 @@
+﻿
+Loaded init checkpoint from outputs\pretrain_full_corpus\ckpt_final.pt
+Resized vocab: 6400 -> 6401 (for special tokens)
+LoRA enabled: r=8, alpha=16.0
+LoRA targets: ['q_proj', 'k_proj', 'v_proj', 'output_proj']
+Total params: 31,729,152 | Trainable (LoRA): 262,144 (0.83%)
+DataLoader: num_workers=8, prefetch_factor=4, pin_memory=True
+Step 50: train_loss 2.0446, val_loss 2.4142
+Step 100: train_loss 3.6485, val_loss 2.3998
+Step 150: train_loss 2.1691, val_loss 2.3841
+Step 200: train_loss 2.6274, val_loss 2.3707
+Step 250: train_loss 2.2397, val_loss 2.3579
+Step 300: train_loss 1.5823, val_loss 2.3488
+Step 350: train_loss 2.7960, val_loss 2.3416
+Step 400: train_loss 2.2997, val_loss 2.3357
+Step 450: train_loss 1.2238, val_loss 2.3305
+Step 500: train_loss 3.0327, val_loss 2.3257
+Step 550: train_loss 2.3758, val_loss 2.3219
+Step 600: train_loss 2.7392, val_loss 2.3190
+Step 650: train_loss 2.5348, val_loss 2.3160
+Step 700: train_loss 3.3598, val_loss 2.3137
+Step 750: train_loss 2.3673, val_loss 2.3114
+Step 800: train_loss 1.9581, val_loss 2.3095
+Step 850: train_loss 2.4829, val_loss 2.3077
+Step 900: train_loss 2.9448, val_loss 2.3058
+Step 950: train_loss 1.5154, val_loss 2.3045
+Step 1000: train_loss 3.2157, val_loss 2.3032

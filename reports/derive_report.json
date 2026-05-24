@@ -1,0 +1,32 @@
+{
+  "step": "derive_tasks",
+  "input_count": 163629,
+  "derived_count": 623650,
+  "task_counts": {
+    "ie_extraction": 163629,
+    "text_to_json": 162615,
+    "format_following": 156275,
+    "schema_repair": 141131
+  },
+  "skip_counts": {},
+  "task_ratios": {
+    "ie_extraction": "26.2%",
+    "text_to_json": "26.1%",
+    "format_following": "25.1%",
+    "schema_repair": "22.6%"
+  },
+  "topic_dist": {
+    "地理地区": 77549,
+    "组织": 68238,
+    "生物": 38024,
+    "建筑": 62359,
+    "自然科学": 12418,
+    "运输": 75844,
+    "事件": 68464,
+    "人物": 69469,
+    "医学": 9314,
+    "人造物件": 28627,
+    "作品": 74745,
+    "天文对象": 38599
+  }
+}

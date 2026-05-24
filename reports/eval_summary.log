@@ -1,0 +1,196 @@
+﻿PROMPT_EVAL_BY_MODEL
+{
+  "qwen_base": {
+    "total": 40,
+    "parseable": 40,
+    "parseable_rate": 1.0,
+    "missing_fields_count": 61,
+    "missing_rate": 0.825,
+    "extra_fields_count": 103,
+    "hallucination_rate": 0.65,
+    "schema_strict_count": 4,
+    "schema_strict_rate": 0.1,
+    "schema_strict_alias_rate": 0.075,
+    "missing_alias_rate": 0.75,
+    "hallucination_alias_rate": 0.75,
+    "total_time_s": 73.78,
+    "avg_latency_s": 1.845
+  },
+  "qwen_lora": {
+    "total": 40,
+    "parseable": 39,
+    "parseable_rate": 0.975,
+    "missing_fields_count": 45,
+    "missing_rate": 0.8,
+    "extra_fields_count": 68,
+    "hallucination_rate": 0.675,
+    "schema_strict_count": 3,
+    "schema_strict_rate": 0.075,
+    "schema_strict_alias_rate": 0.15,
+    "missing_alias_rate": 0.6,
+    "hallucination_alias_rate": 0.55,
+    "total_time_s": 39.12,
+    "avg_latency_s": 0.978
+  }
+}
+
+PROMPT_EVAL_BY_GROUP
+{
+  "qwen_base": {
+    "extraction": {
+      "total": 18,
+      "parseable_rate": 1.0,
+      "missing_rate": 0.8889,
+      "hallucination_rate": 1.0,
+      "schema_strict_rate": 0.0,
+      "schema_strict_alias_rate": 0.0,
+      "missing_alias_rate": 0.7778
+    },
+    "schema_constraint": {
+      "total": 12,
+      "parseable_rate": 1.0,
+      "missing_rate": 0.9167,
+      "hallucination_rate": 0.6667,
+      "schema_strict_rate": 0.0,
+      "schema_strict_alias_rate": 0.0,
+      "missing_alias_rate": 0.8333
+    },
+    "format_following": {
+      "total": 10,
+      "parseable_rate": 1.0,
+      "missing_rate": 0.6,
+      "hallucination_rate": 0.0,
+      "schema_strict_rate": 0.4,
+      "schema_strict_alias_rate": 0.3,
+      "missing_alias_rate": 0.6
+    }
+  },
+  "qwen_lora": {
+    "extraction": {
+      "total": 18,
+      "parseable_rate": 1.0,
+      "missing_rate": 0.7778,
+      "hallucination_rate": 1.0,
+      "schema_strict_rate": 0.0,
+      "schema_strict_alias_rate": 0.1111,
+      "missing_alias_rate": 0.5
+    },
+    "schema_constraint": {
+      "total": 12,
+      "parseable_rate": 1.0,
+      "missing_rate": 0.9167,
+      "hallucination_rate": 0.6667,
+      "schema_strict_rate": 0.0,
+      "schema_strict_alias_rate": 0.0833,
+      "missing_alias_rate": 0.6667
+    },
+    "format_following": {
+      "total": 10,
+      "parseable_rate": 0.9,
+      "missing_rate": 0.7,
+      "hallucination_rate": 0.1,
+      "schema_strict_rate": 0.3,
+      "schema_strict_alias_rate": 0.3,
+      "missing_alias_rate": 0.7
+    }
+  }
+}
+
+VALID_200_SUMMARY
+{
+  "model_path": "outputs\\qwen_lora_merged_final",
+  "data_path": "data\\sft_candidate\\valid.jsonl",
+  "sample_count": 200,
+  "seed": 42,
+  "max_new_tokens": 256,
+  "temperature": 0.0,
+  "top_p": 1.0,
+  "parseable_rate": 1.0,
+  "direct_json_rate": 1.0,
+  "markdown_fence_rate": 0.0,
+  "exact_match_rate": 0.2,
+  "avg_field_precision": 0.8749384920634917,
+  "avg_field_recall": 0.7343706709956709,
+  "avg_field_f1": 0.7839667314969176,
+  "avg_pair_precision": 0.7796785714285712,
+  "avg_pair_recall": 0.6237500000000001,
+  "avg_pair_f1": 0.6731100288600288,
+  "avg_latency_sec": 1.031116888523102,
+  "by_task": {
+    "format_following": {
+      "total": 26,
+      "parseable_rate": 1.0,
+      "direct_json_rate": 1.0,
+      "exact_match_rate": 0.11538461538461539
+    },
+    "ie_extraction": {
+      "total": 100,
+      "parseable_rate": 1.0,
+      "direct_json_rate": 1.0,
+      "exact_match_rate": 0.14
+    },
+    "schema_repair": {
+      "total": 17,
+      "parseable_rate": 1.0,
+      "direct_json_rate": 1.0,
+      "exact_match_rate": 0.9411764705882353
+    },
+    "text_to_json": {
+      "total": 57,
+      "parseable_rate": 1.0,
+      "direct_json_rate": 1.0,
+      "exact_match_rate": 0.12280701754385964
+    }
+  }
+}
+
+VALID_FAILURE_SAMPLES_SAVED=17
+
+--- LOW_SCORE_SAMPLE ---
+id=instructie_ie_extraction_012087 task=ie_extraction topic=组织 parsed=True direct=True
+field_f1=0.0 pair_f1=0.0 exact=False
+raw={"当今日报": {"创办者": ["詹德兰", "颜重庆"], "位于": "马来西亚"}, "大马": {"位于": "马来西亚"}}
+gold={"当今大马": {"位于": "马来西亚", "创办者": ["颜重庆", "詹德兰"], "成立时间": "1999年11月20日"}}
+
+--- LOW_SCORE_SAMPLE ---
+id=instructie_format_following_022524 task=format_following topic=事件 parsed=True direct=True
+field_f1=0.0 pair_f1=0.0 exact=False
+raw={"1053年－1054年的麦地那之围": {"参与者": ["拜占庭帝国", "穆斯林"], "发生地点": "马耳他岛上的穆斯林城市麦地那(Medina，今马耳他的姆迪纳)"}}
+gold={"麦地那之围": {"参与者": ["马耳他岛上的穆斯林城市麦地那", "拜占庭帝国"], "发生时间": "1053年－1054年", "发生地点": "马耳他岛"}, "麦地那": {"别名": ["Medina", "姆迪纳"]}}
+
+--- LOW_SCORE_SAMPLE ---
+id=instructie_ie_extraction_000847 task=ie_extraction topic=事件 parsed=True direct=True
+field_f1=0.0 pair_f1=0.0 exact=False
+raw={"2011年4月宫城地震": {"发生地点": "日本宫城县东部海域", "伤亡人数": "4人死亡、至少141人受伤", "发生时间": "7日深夜"}}
+gold={"宫城地震": {"发生时间": ["2011年4月", "7日深夜"], "发生地点": "日本宫城县东部海域", "伤亡人数": "4人死亡、至少141人受伤"}}
+
+--- LOW_SCORE_SAMPLE ---
+id=instructie_ie_extraction_001370 task=ie_extraction topic=人物 parsed=True direct=True
+field_f1=0.0 pair_f1=0.0 exact=False
+raw={"耶律阿保机": {"出生日期": "872年", "别名": "耶律亿", "死亡日期": "926年9月6日", "职务": "大契丹国的第一位皇帝"}}
+gold={"辽太祖耶律阿保机": {"别名": ["安巴坚", "耶律亿"], "配偶": "萧氏", "出生日期": "872年", "死亡日期": "926年9月6日"}}
+
+--- LOW_SCORE_SAMPLE ---
+id=instructie_ie_extraction_012551 task=ie_extraction topic=自然科学 parsed=True direct=True
+field_f1=0.0 pair_f1=0.0 exact=False
+raw={"可分离变量的偏微分方程": {"用途": "求解"}}
+gold={"分离变量法": {"用途": "偏微分方程"}}
+
+--- LOW_SCORE_SAMPLE ---
+id=instructie_text_to_json_018166 task=text_to_json topic=地理地区 parsed=True direct=True
+field_f1=0.0 pair_f1=0.0 exact=False
+raw={"南大西洋诸岛省": {"行政中心": "乌斯怀亚", "位于": "阿根廷"}, "阿根廷": {"位于": "南美洲"}}
+gold={"火地省": {"别名": ["fueguino", "Fin del Mundo"], "位于": "阿根廷", "行政中心": "乌斯怀亚"}}
+
+--- LOW_SCORE_SAMPLE ---
+id=instructie_text_to_json_017694 task=text_to_json topic=医学 parsed=True direct=True
+field_f1=0.0 pair_f1=0.0 exact=False
+raw={"反射学": {"别名": "反射疗法"}, "反射疗法": {"别名": "区带疗法"}}
+gold={"反射学/反射疗法": {"别名": ["脚底按摩", "区带疗法"], "疗法": ["替代疗法", "脚底按摩"]}}
+
+--- LOW_SCORE_SAMPLE ---
+id=instructie_ie_extraction_013248 task=ie_extraction topic=自然科学 parsed=True direct=True
+field_f1=0.0 pair_f1=0.0 exact=False
+raw={"历史语言学": {"组成": "波浪模型"}}
+gold={"波浪模型": {"别名": ["波理论", "波模型"], "用途": "语言变化的模型"}}
+

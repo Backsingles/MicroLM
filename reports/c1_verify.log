@@ -1,0 +1,82 @@
+﻿Processed files:
+
+Name                      Length LastWriteTime     
+----                      ------ -------------     
+derived_all.jsonl      835405795 2026/5/20 20:57:29
+filtered_train.jsonl   208989042 2026/5/20 20:57:13
+normalized_test.jsonl     641514 2026/5/20 20:57:06
+normalized_train.jsonl 224311826 2026/5/20 20:57:06
+normalized_valid.jsonl    646096 2026/5/20 20:57:06
+sampled_train.jsonl     33193015 2026/5/20 20:57:34
+tiered_train.jsonl     227860199 2026/5/20 20:57:17
+
+
+
+SFT candidate files:
+
+Name            Length LastWriteTime     
+----            ------ -------------     
+metadata.json     1100 2026/5/20 20:57:35
+train.jsonl   31652026 2026/5/20 20:57:35
+valid.jsonl    1675147 2026/5/20 20:57:35
+
+
+
+Line counts:
+E:\MicroLM\data\processed\derived_all.jsonl: 623650
+E:\MicroLM\data\processed\filtered_train.jsonl: 163629
+E:\MicroLM\data\processed\normalized_test.jsonl: 1002
+E:\MicroLM\data\processed\normalized_train.jsonl: 171471
+E:\MicroLM\data\processed\normalized_valid.jsonl: 1004
+E:\MicroLM\data\processed\sampled_train.jsonl: 30000
+E:\MicroLM\data\processed\tiered_train.jsonl: 163629
+E:\MicroLM\data\sft_candidate\train.jsonl: 28500
+E:\MicroLM\data\sft_candidate\valid.jsonl: 1500
+Metadata:
+{
+  "version": "1.0",
+  "created_at": "2026-05-20T20:57:35.476941",
+  "source": "zjunlp/InstructIE",
+  "description": "鍩轰簬 InstructIE 鐨勯潰鍚戜俊鎭娊鍙栦笌缁撴瀯鍖栬緭鍑虹殑涓枃 SFT 鏁版嵁闆?,
+  "train_samples": 28500,
+  "valid_samples": 1500,
+  "task_types": [
+    "ie_extraction",
+    "text_to_json",
+    "format_following",
+    "schema_repair"
+  ],
+  "task_ratio": {
+    "ie_extraction": 0.5,
+    "text_to_json": 0.25,
+    "format_following": 0.15,
+    "schema_repair": 0.1
+  },
+  "topic_schemas": [
+    "浜嬩欢",
+    "浜虹墿",
+    "浜洪€犵墿浠?,
+    "浣滃搧",
+    "鍖诲",
+    "鍦扮悊鍦板尯",
+    "澶╂枃瀵硅薄",
+    "寤虹瓚",
+    "鐢熺墿",
+    "缁勭粐",
+    "鑷劧绉戝",
+    "杩愯緭"
+  ],
+  "format": "chat-style JSONL with messages field",
+  "original_data_size": 171471,
+  "pipeline_steps": [
+    "normalize (瀛楁缁熶竴)",
+    "hard_filter (绌哄叧绯?娉勬紡/寮傚父)",
+    "soft_filter (per-topic P99 鍒嗕綅鏁?",
+    "quality_tier (high/medium/low)",
+    "derive_tasks (4绫讳换鍔℃淳鐢?",
+    "stratified_sample (鍒嗗眰閲囨牱)"
+  ]
+}
+
+Exit code:
+0

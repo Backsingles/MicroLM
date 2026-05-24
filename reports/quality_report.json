@@ -1,0 +1,78 @@
+{
+  "step": "quality_tier",
+  "input_count": 163629,
+  "tier_counts": {
+    "high": 156275,
+    "low": 1014,
+    "medium": 6340
+  },
+  "dim_pass_rates": {
+    "match": "98.3%",
+    "rel_count": "86.9%",
+    "input_len": "92.8%"
+  },
+  "avg_match_ratio": "99.7%",
+  "full_match_count": 160782,
+  "topic_tier_dist": {
+    "地理地区": {
+      "high": 19344,
+      "low": 24,
+      "medium": 93
+    },
+    "组织": {
+      "high": 17548,
+      "low": 71,
+      "medium": 124
+    },
+    "生物": {
+      "high": 9377,
+      "medium": 213,
+      "low": 99
+    },
+    "建筑": {
+      "high": 15627,
+      "medium": 283,
+      "low": 67
+    },
+    "自然科学": {
+      "high": 3526,
+      "low": 32,
+      "medium": 104
+    },
+    "运输": {
+      "high": 18875,
+      "medium": 257,
+      "low": 136
+    },
+    "事件": {
+      "high": 17580,
+      "low": 171,
+      "medium": 516
+    },
+    "人物": {
+      "high": 15708,
+      "medium": 3191,
+      "low": 256
+    },
+    "医学": {
+      "high": 2391,
+      "medium": 286,
+      "low": 63
+    },
+    "人造物件": {
+      "high": 8203,
+      "medium": 365,
+      "low": 17
+    },
+    "作品": {
+      "high": 18399,
+      "medium": 899,
+      "low": 74
+    },
+    "天文对象": {
+      "high": 9697,
+      "low": 4,
+      "medium": 9
+    }
+  }
+}

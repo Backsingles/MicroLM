@@ -1,0 +1,46 @@
+{
+  "model_path": "outputs\\qwen_lora_merged_final",
+  "data_path": "data\\qwen_refine\\eval_holdout.jsonl",
+  "sample_count": 200,
+  "seed": 42,
+  "max_new_tokens": 256,
+  "temperature": 0.0,
+  "top_p": 1.0,
+  "parseable_rate": 1.0,
+  "direct_json_rate": 1.0,
+  "markdown_fence_rate": 0.0,
+  "exact_match_rate": 0.24,
+  "avg_field_precision": 0.8719821428571431,
+  "avg_field_recall": 0.7527056277056277,
+  "avg_field_f1": 0.7943046804416768,
+  "avg_pair_precision": 0.7515833333333335,
+  "avg_pair_recall": 0.6299999999999999,
+  "avg_pair_f1": 0.6706443001443003,
+  "avg_latency_sec": 0.9994211363792419,
+  "by_task": {
+    "format_following": {
+      "total": 28,
+      "parseable_rate": 1.0,
+      "direct_json_rate": 1.0,
+      "exact_match_rate": 0.14285714285714285
+    },
+    "ie_extraction": {
+      "total": 100,
+      "parseable_rate": 1.0,
+      "direct_json_rate": 1.0,
+      "exact_match_rate": 0.2
+    },
+    "schema_repair": {
+      "total": 20,
+      "parseable_rate": 1.0,
+      "direct_json_rate": 1.0,
+      "exact_match_rate": 0.95
+    },
+    "text_to_json": {
+      "total": 52,
+      "parseable_rate": 1.0,
+      "direct_json_rate": 1.0,
+      "exact_match_rate": 0.09615384615384616
+    }
+  }
+}

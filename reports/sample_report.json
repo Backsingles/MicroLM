@@ -1,0 +1,40 @@
+{
+  "step": "stratified_sample",
+  "input_count": 623650,
+  "sampled_count": 30000,
+  "target": 30000,
+  "task_targets": {
+    "ie_extraction": 15000,
+    "text_to_json": 7500,
+    "format_following": 4500,
+    "schema_repair": 3000
+  },
+  "actual_task_dist": {
+    "ie_extraction": 15000,
+    "text_to_json": 7500,
+    "format_following": 4500,
+    "schema_repair": 3000
+  },
+  "topic_dist": {
+    "事件": 2500,
+    "人物": 2500,
+    "人造物件": 2500,
+    "作品": 2500,
+    "医学": 2500,
+    "地理地区": 2500,
+    "天文对象": 2500,
+    "建筑": 2500,
+    "生物": 2500,
+    "组织": 2500,
+    "自然科学": 2500,
+    "运输": 2500
+  },
+  "quality_dist": {
+    "high": 30000
+  },
+  "complexity_dist": {
+    "medium": 29620,
+    "simple": 256,
+    "complex": 124
+  }
+}

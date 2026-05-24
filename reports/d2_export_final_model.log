@@ -1,0 +1,33 @@
+﻿
+[1/4] Loading tokenizer from E:\MicroLM\Qwen2.5-1.5B-Instruct ...
+[2/4] Loading base model from E:\MicroLM\Qwen2.5-1.5B-Instruct ...
+System.Management.Automation.RemoteException
+Loading weights:   0%|          | 0/338 [00:00<?, ?it/s]
+Loading weights: 100%|��������������������| 338/338 [00:00<00:00, 10721.68it/s]
+[3/4] Loading LoRA adaptor from E:\MicroLM\outputs\qwen_lora\adaptor_final and merging ...
+[4/4] Saving merged model to E:\MicroLM\outputs\qwen_lora_merged_final ...
+System.Management.Automation.RemoteException
+Writing model shards:   0%|          | 0/1 [00:00<?, ?it/s]
+Writing model shards: 100%|��������������������| 1/1 [00:01<00:00,  1.83s/it]
+Writing model shards: 100%|��������������������| 1/1 [00:01<00:00,  1.83s/it]
+
+==================================================
+EXPORT COMPLETE
+==================================================
+  Base model:     E:\MicroLM\Qwen2.5-1.5B-Instruct
+  Adaptor:        E:\MicroLM\outputs\qwen_lora\adaptor_final
+  Output:         E:\MicroLM\outputs\qwen_lora_merged_final
+  Total params:   1,543,714,304
+  Elapsed:        6.9s
+  LoRA config:    r=8, alpha=16
+
+Output directory contents:
+  chat_template.jinja                 0.0 MB
+  config.json                         0.0 MB
+  export_metadata.json                0.0 MB
+  generation_config.json              0.0 MB
+  model.safetensors                2944.4 MB
+  tokenizer.json                     10.9 MB
+  tokenizer_config.json               0.0 MB
+
+Metadata saved to E:\MicroLM\outputs\qwen_lora_merged_final\export_metadata.json

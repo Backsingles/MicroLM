@@ -1,0 +1,34 @@
+{
+  "qwen_base": {
+    "total": 40,
+    "parseable": 40,
+    "parseable_rate": 1.0,
+    "missing_fields_count": 61,
+    "missing_rate": 0.825,
+    "extra_fields_count": 103,
+    "hallucination_rate": 0.65,
+    "schema_strict_count": 4,
+    "schema_strict_rate": 0.1,
+    "schema_strict_alias_rate": 0.075,
+    "missing_alias_rate": 0.75,
+    "hallucination_alias_rate": 0.75,
+    "total_time_s": 73.78,
+    "avg_latency_s": 1.845
+  },
+  "qwen_lora": {
+    "total": 40,
+    "parseable": 39,
+    "parseable_rate": 0.975,
+    "missing_fields_count": 45,
+    "missing_rate": 0.8,
+    "extra_fields_count": 68,
+    "hallucination_rate": 0.675,
+    "schema_strict_count": 3,
+    "schema_strict_rate": 0.075,
+    "schema_strict_alias_rate": 0.15,
+    "missing_alias_rate": 0.6,
+    "hallucination_alias_rate": 0.55,
+    "total_time_s": 39.12,
+    "avg_latency_s": 0.978
+  }
+}

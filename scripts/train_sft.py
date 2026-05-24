@@ -60,6 +60,9 @@ def load_config_defaults(config_path: str | None) -> dict[str, object]:
         "save_interval": training.get("save_interval"),
         "device": training.get("device"),
         "seed": training.get("seed"),
+        "num_workers": training.get("num_workers"),
+        "prefetch_factor": training.get("prefetch_factor"),
+        "pin_memory": training.get("pin_memory"),
         "out_dir": Path(training["out_dir"]) if training.get("out_dir") else None,
         "init_checkpoint": Path(training["init_checkpoint"]) if training.get("init_checkpoint") else None,
         "resume": training.get("resume"),
@@ -125,6 +128,14 @@ def build_parser(defaults: dict[str, object]) -> argparse.ArgumentParser:
     parser.add_argument("--save-interval", type=int, default=defaults.get("save_interval", 50))
     parser.add_argument("--device", type=str, default=defaults.get("device", "cuda" if torch.cuda.is_available() else "cpu"))
     parser.add_argument("--seed", type=int, default=defaults.get("seed", 42))
+    parser.add_argument("--num-workers", type=int, default=defaults.get("num_workers", 0))
+    parser.add_argument("--prefetch-factor", type=int, default=defaults.get("prefetch_factor", 2))
+    parser.add_argument(
+        "--pin-memory",
+        action=argparse.BooleanOptionalAction,
+        default=defaults.get("pin_memory", None),
+        help="Pin DataLoader memory before transferring batches to CUDA.",
+    )
     parser.add_argument("--out-dir", type=Path, default=defaults.get("out_dir", Path("outputs/sft")))
     parser.add_argument("--init-checkpoint", type=Path, default=defaults.get("init_checkpoint"))
     parser.add_argument("--resume", action="store_true", default=defaults.get("resume", False))
@@ -205,14 +216,14 @@ def build_model(args: argparse.Namespace, device: str) -> TransformerLM:
     return model
 
 
-def evaluate(model: TransformerLM, loader: DataLoader, device: str) -> float:
+def evaluate(model: TransformerLM, loader: DataLoader, device: str, non_blocking: bool = False) -> float:
     model.eval()
     total_loss = 0.0
     total_weight = 0.0
     with torch.no_grad():
         for input_ids, labels in loader:
-            input_ids = input_ids.to(device)
-            labels = labels.to(device)
+            input_ids = input_ids.to(device, non_blocking=non_blocking)
+            labels = labels.to(device, non_blocking=non_blocking)
             logits = model(input_ids)
             shift_logits = logits[:, :-1, :]
             shift_labels = labels[:, 1:]
@@ -233,6 +244,26 @@ def iter_batches(loader: DataLoader):
             yield batch
 
 
+def build_sft_loader(
+    dataset: SFTDataset,
+    batch_size: int,
+    shuffle: bool,
+    num_workers: int,
+    pin_memory: bool,
+    prefetch_factor: int,
+) -> DataLoader:
+    loader_kwargs: dict[str, object] = {
+        "batch_size": batch_size,
+        "shuffle": shuffle,
+        "num_workers": num_workers,
+        "pin_memory": pin_memory,
+    }
+    if num_workers > 0:
+        loader_kwargs["prefetch_factor"] = prefetch_factor
+        loader_kwargs["persistent_workers"] = True
+    return DataLoader(dataset, **loader_kwargs)
+
+
 def main() -> None:
     args = parse_args()
     if args.train_data_path is None or args.valid_data_path is None:
@@ -244,6 +275,13 @@ def main() -> None:
 
     args.out_dir.mkdir(parents=True, exist_ok=True)
     set_seed(args.seed)
+    if args.num_workers < 0:
+        raise ValueError("--num-workers must be >= 0")
+    if args.prefetch_factor < 1:
+        raise ValueError("--prefetch-factor must be >= 1")
+    if args.pin_memory is None:
+        args.pin_memory = str(args.device).startswith("cuda")
+    non_blocking_transfer = bool(args.pin_memory and str(args.device).startswith("cuda"))
 
     tokenizer = load_configured_tokenizer(args)
     model = build_model(args, args.device)
@@ -327,8 +365,28 @@ def main() -> None:
         seed=args.seed,
         eos_token=args.eos_token,
     )
-    train_loader = DataLoader(train_ds, batch_size=args.batch_size, shuffle=True, num_workers=0)
-    valid_loader = DataLoader(valid_ds, batch_size=args.batch_size, shuffle=False, num_workers=0)
+    train_loader = build_sft_loader(
+        train_ds,
+        batch_size=args.batch_size,
+        shuffle=True,
+        num_workers=args.num_workers,
+        pin_memory=bool(args.pin_memory),
+        prefetch_factor=args.prefetch_factor,
+    )
+    valid_loader = build_sft_loader(
+        valid_ds,
+        batch_size=args.batch_size,
+        shuffle=False,
+        num_workers=args.num_workers,
+        pin_memory=bool(args.pin_memory),
+        prefetch_factor=args.prefetch_factor,
+    )
+    print(
+        "DataLoader: "
+        f"num_workers={args.num_workers}, "
+        f"prefetch_factor={args.prefetch_factor if args.num_workers > 0 else 'n/a'}, "
+        f"pin_memory={bool(args.pin_memory)}"
+    )
 
     optimizer = AdamW(
         get_lora_params(model) if args.use_lora else model.parameters(),
@@ -366,8 +424,8 @@ def main() -> None:
     for step in range(start_step, args.max_steps):
         model.train()
         input_ids, labels = next(train_iter)
-        input_ids = input_ids.to(args.device)
-        labels = labels.to(args.device)
+        input_ids = input_ids.to(args.device, non_blocking=non_blocking_transfer)
+        labels = labels.to(args.device, non_blocking=non_blocking_transfer)
 
         logits = model(input_ids)
         shift_logits = logits[:, :-1, :]
@@ -383,7 +441,7 @@ def main() -> None:
         completed_step = step + 1
 
         if completed_step % args.eval_interval == 0 or completed_step == args.max_steps:
-            val_loss = evaluate(model, valid_loader, args.device)
+            val_loss = evaluate(model, valid_loader, args.device, non_blocking=non_blocking_transfer)
             print(f"Step {completed_step}: train_loss {loss.item():.4f}, val_loss {val_loss:.4f}")
             with log_path.open("a", encoding="utf-8") as f:
                 f.write(

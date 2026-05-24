@@ -335,3 +335,6 @@ Benchmark **5 组配置 0 错误**，稳定性验证 **Parse% 100%**（服务化
 
 - [[01-项目总览]] — 项目全局地图，两条主线的关系说明
 - [[02-自研 MicroLM 主线]] — 自研链路的 LoRA 实现（本线的参考起点）
+- [Qwen 迁移与结构化输出主线收口报告](../../reports/qwen_migration_structured_closure.md) — 数据、训练、导出、评测与部署准备收口
+- [Qwen 结构化输出模型 vLLM 部署说明](../../docs/vllm_deploy.md) — vLLM 启动、smoke、benchmark 与稳定性验证命令
+- [vLLM 部署验证与 Benchmark 报告](../../reports/vllm_benchmark_report.md) — smoke 5/5、benchmark 5 组 0 错误与结构化稳定性结果

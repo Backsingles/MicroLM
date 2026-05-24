@@ -1,0 +1,13 @@
+﻿
+InstructIE ready: data\instructie\train_zh.json
+InstructIE ready: data\instructie\valid_zh.json
+InstructIE ready: data\instructie\test_zh.json
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+InstructIE ready: data\instructie\schema_zh.json
+System.Management.Automation.RemoteException
+Fetching 10 files:   0%|          | 0/10 [00:00<?, ?it/s]
+Fetching 10 files:  10%|��         | 1/10 [00:01<00:16,  1.80s/it]
+Fetching 10 files:  60%|������������    | 6/10 [00:03<00:02,  1.78it/s]
+Fetching 10 files:  70%|��������������   | 7/10 [08:31<05:06, 102.11s/it]
+Fetching 10 files: 100%|��������������������| 10/10 [08:31<00:00, 51.10s/it]
+Qwen snapshot ready: E:\MicroLM\Qwen2.5-1.5B-Instruct

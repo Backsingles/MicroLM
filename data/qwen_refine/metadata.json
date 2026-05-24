@@ -1,0 +1,36 @@
+{
+  "seed": 20260520,
+  "failure_path": "results\\qwen_valid_eval_200\\failure_samples.jsonl",
+  "train_source": "data\\sft_candidate\\train.jsonl",
+  "valid_source": "data\\sft_candidate\\valid.jsonl",
+  "hardcase_unique": 17,
+  "hardcase_repeat": 30,
+  "hardcase_rows": 510,
+  "support_samples": 990,
+  "train_rows": 1500,
+  "valid_rows": 200,
+  "holdout_rows": 200,
+  "hardcase_by_task": {
+    "text_to_json": 6,
+    "ie_extraction": 9,
+    "format_following": 2
+  },
+  "train_by_task": {
+    "format_following": 194,
+    "ie_extraction": 797,
+    "text_to_json": 417,
+    "schema_repair": 92
+  },
+  "valid_by_task": {
+    "ie_extraction": 104,
+    "format_following": 31,
+    "text_to_json": 43,
+    "schema_repair": 22
+  },
+  "holdout_by_task": {
+    "ie_extraction": 100,
+    "text_to_json": 52,
+    "format_following": 28,
+    "schema_repair": 20
+  }
+}

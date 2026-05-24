@@ -1,0 +1,4 @@
+你好，请介绍一下你自己。
+/history
+/save reports/chat_smoke_session_utf8.jsonl
+/quit

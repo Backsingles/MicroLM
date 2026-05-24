@@ -1,0 +1,33 @@
+﻿
+[1/4] Loading tokenizer from outputs\qwen_lora_merged_final ...
+[2/4] Loading base model from outputs\qwen_lora_merged_final ...
+System.Management.Automation.RemoteException
+Loading weights:   0%|          | 0/338 [00:00<?, ?it/s]
+Loading weights: 100%|██████████| 338/338 [00:00<00:00, 16085.45it/s]
+[3/4] Loading LoRA adaptor from outputs\qwen_lora_refine\best_adaptor and merging ...
+[4/4] Saving merged model to outputs\qwen_lora_merged_refined_best ...
+System.Management.Automation.RemoteException
+Writing model shards:   0%|          | 0/1 [00:00<?, ?it/s]
+Writing model shards: 100%|██████████| 1/1 [00:02<00:00,  2.27s/it]
+Writing model shards: 100%|██████████| 1/1 [00:02<00:00,  2.27s/it]
+
+==================================================
+EXPORT COMPLETE
+==================================================
+  Base model:     outputs\qwen_lora_merged_final
+  Adaptor:        outputs\qwen_lora_refine\best_adaptor
+  Output:         outputs\qwen_lora_merged_refined_best
+  Total params:   1,543,714,304
+  Elapsed:        7.7s
+  LoRA config:    r=8, alpha=16
+
+Output directory contents:
+  chat_template.jinja                 0.0 MB
+  config.json                         0.0 MB
+  export_metadata.json                0.0 MB
+  generation_config.json              0.0 MB
+  model.safetensors                2944.4 MB
+  tokenizer.json                     10.9 MB
+  tokenizer_config.json               0.0 MB
+
+Metadata saved to outputs\qwen_lora_merged_refined_best\export_metadata.json

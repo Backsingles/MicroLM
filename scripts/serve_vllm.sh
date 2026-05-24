@@ -4,6 +4,7 @@
 # Usage:
 #   bash scripts/serve_vllm.sh                    # defaults (port 8000, GPU auto)
 #   bash scripts/serve_vllm.sh --port 8001        # custom port
+#   bash scripts/serve_vllm.sh --port=8001        # custom port
 #   bash scripts/serve_vllm.sh --cpu              # force CPU (slow, for testing)
 #
 # Prerequisites:
@@ -23,30 +24,60 @@ PORT="${VLLM_PORT:-8000}"
 HOST="${VLLM_HOST:-0.0.0.0}"
 TP_SIZE="${VLLM_TENSOR_PARALLEL_SIZE:-1}"
 MAX_MODEL_LEN="${VLLM_MAX_MODEL_LEN:-4096}"
-DTYPE="${VLLM_DYPE:-auto}"
+DTYPE="${VLLM_DTYPE:-auto}"
 USE_CPU=0
 
+# Keep defaults friendly for the current WSL/RTX 50-series setup.
+export VLLM_NO_USAGE_STATS="${VLLM_NO_USAGE_STATS:-1}"
+export VLLM_USE_FLASHINFER_SAMPLER="${VLLM_USE_FLASHINFER_SAMPLER:-0}"
+
 # ── Parse args ───────────────────────────────────────────────────────────
-for arg in "$@"; do
-    case $arg in
+while [[ $# -gt 0 ]]; do
+    arg="$1"
+    case "$arg" in
         --port=*)
             PORT="${arg#*=}"
+            shift
+            ;;
+        --port)
+            PORT="$2"
+            shift 2
             ;;
         --host=*)
             HOST="${arg#*=}"
+            shift
+            ;;
+        --host)
+            HOST="$2"
+            shift 2
             ;;
         --cpu)
             USE_CPU=1
+            shift
             ;;
         --tp=*)
             TP_SIZE="${arg#*=}"
+            shift
+            ;;
+        --tp)
+            TP_SIZE="$2"
+            shift 2
             ;;
         --max-model-len=*|--max-model-length=*)
             MAX_MODEL_LEN="${arg#*=}"
+            shift
+            ;;
+        --max-model-len|--max-model-length)
+            MAX_MODEL_LEN="$2"
+            shift 2
             ;;
         --help|-h)
-            echo "Usage: $0 [--port=PORT] [--host=HOST] [--cpu] [--tp=N] [--max-model-len=N]"
+            echo "Usage: $0 [--port PORT|--port=PORT] [--host HOST|--host=HOST] [--cpu] [--tp N|--tp=N] [--max-model-len N|--max-model-len=N]"
             exit 0
+            ;;
+        *)
+            echo "[ERROR] Unknown argument: $arg"
+            exit 1
             ;;
     esac
 done
@@ -71,6 +102,7 @@ echo "  Model:      $MODEL_PATH"
 echo "  Host:Port:  ${HOST}:${PORT}"
 echo "  TP size:    ${TP_SIZE}"
 echo "  Max len:    ${MAX_MODEL_LEN}"
+echo "  Sampler:    flashinfer=${VLLM_USE_FLASHINFER_SAMPLER}"
 echo "  API docs:   http://localhost:${PORT}/docs"
 echo "============================================"
 

@@ -15,6 +15,7 @@
   "output": {
     "output_dir": "data/pretrain_clean/tokenized_full",
     "read_chunk_bytes": 4194304,
-    "token_batch_size": 1000000
+    "token_batch_size": 1000000,
+    "num_workers": 10
   }
 }

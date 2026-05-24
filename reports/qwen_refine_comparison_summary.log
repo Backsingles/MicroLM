@@ -1,0 +1,57 @@
+﻿[
+  {
+    "name": "original_hardcases",
+    "samples": 17,
+    "parseable": 1.0,
+    "direct_json": 1.0,
+    "exact": 0.0,
+    "field_f1": 0.14818775995246586,
+    "pair_f1": 0.05751633986928104,
+    "latency": 0.8622989093556124
+  },
+  {
+    "name": "refined_hardcases",
+    "samples": 17,
+    "parseable": 1.0,
+    "direct_json": 1.0,
+    "exact": 0.0,
+    "field_f1": 0.14688057040998218,
+    "pair_f1": 0.05751633986928104,
+    "latency": 0.8510127067565918
+  },
+  {
+    "name": "original_holdout",
+    "samples": 200,
+    "parseable": 1.0,
+    "direct_json": 1.0,
+    "exact": 0.24,
+    "field_f1": 0.7943046804416768,
+    "pair_f1": 0.6706443001443003,
+    "latency": 0.9994211363792419
+  },
+  {
+    "name": "refined_holdout",
+    "samples": 200,
+    "parseable": 1.0,
+    "direct_json": 1.0,
+    "exact": 0.25,
+    "field_f1": 0.7948327634697598,
+    "pair_f1": 0.6685057720057721,
+    "latency": 1.0108925700187683
+  }
+]
+
+DELTAS
+{
+  "hardcases": {
+    "exact_delta": 0.0,
+    "field_f1_delta": -0.0013071895424836832,
+    "pair_f1_delta": 0.0
+  },
+  "holdout": {
+    "exact_delta": 0.010000000000000009,
+    "field_f1_delta": 0.0005280830280830484,
+    "pair_f1_delta": -0.0021385281385282173
+  }
+}
+

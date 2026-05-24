@@ -1,0 +1,35 @@
+﻿
+Loading tokenizer...
+Loading model...
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+System.Management.Automation.RemoteException
+Loading weights:   0%|          | 0/338 [00:00<?, ?it/s]
+Loading weights:  15%|█▌        | 51/338 [00:00<00:00, 476.84it/s]
+Loading weights:  43%|████▎     | 147/338 [00:00<00:00, 743.97it/s]
+Loading weights:  72%|███████▏  | 244/338 [00:00<00:00, 831.76it/s]
+Loading weights: 100%|██████████| 338/338 [00:00<00:00, 835.73it/s]
+Total params: 1,545,893,376 | Trainable (LoRA): 2,179,072 (0.14%)
+Loading data...
+  Loaded 1500 samples from data/qwen_refine/train.jsonl
+  Loaded 200 samples from data/qwen_refine/valid.jsonl
+
+Starting training: 300 steps, grad_accum=4
+  Train samples: 1500, Valid samples: 200
+  Effective batch size: 16
+  Device: cuda, FP16: True
+Step 50/300 | train_loss 0.2079 | val_loss 0.1534 | lr 1.00e-05 | elapsed 89s
+  -> New best val_loss: 0.1534
+Step 100/300 | train_loss 0.1539 | val_loss 0.1537 | lr 1.00e-05 | elapsed 193s
+  -> Saved checkpoint: outputs\qwen_lora_refine\ckpt_step_100
+Step 150/300 | train_loss 0.2013 | val_loss 0.1544 | lr 1.00e-05 | elapsed 288s
+Step 200/300 | train_loss 0.1074 | val_loss 0.1555 | lr 1.00e-05 | elapsed 384s
+  -> Saved checkpoint: outputs\qwen_lora_refine\ckpt_step_200
+Step 250/300 | train_loss 0.1358 | val_loss 0.1578 | lr 1.00e-05 | elapsed 479s
+Step 300/300 | train_loss 0.1670 | val_loss 0.1602 | lr 1.00e-05 | elapsed 565s
+  -> Saved checkpoint: outputs\qwen_lora_refine\ckpt_step_300
+
+Training complete. Final adaptor saved to outputs\qwen_lora_refine\adaptor_final
+  Steps: 50 -> 300
+  Train loss: 0.2079 -> 0.1670
+  Val loss: 0.1534 -> 0.1602
+  Best val loss: 0.1534
